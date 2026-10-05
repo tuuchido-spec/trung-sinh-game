@@ -1,11 +1,10 @@
 /* =========================================================
-   TRÙNG SINH
-   Prototype Game
+   TRÙNG SINH — GAME PROTOTYPE
 ========================================================= */
 
 
 /* =========================================================
-   DATA
+   DỮ LIỆU
 ========================================================= */
 
 const identities = [
@@ -25,7 +24,6 @@ const identities = [
     "Người thừa kế bí ẩn",
     "Người bình thường"
 ];
-
 
 const personalities = [
     "Dịu dàng",
@@ -50,520 +48,79 @@ const personalities = [
     "Bí ẩn"
 ];
 
-
 const maleLeads = [
     {
         name: "Lục Đình Khâm",
         job: "CEO tập đoàn",
         personality: "Lạnh lùng, quyết đoán"
     },
-
     {
         name: "Tần Mặc",
         job: "Bác sĩ",
         personality: "Điềm tĩnh, dịu dàng"
     },
-
     {
         name: "Cố Thừa Ngôn",
         job: "Luật sư",
         personality: "Lý trí, sắc bén"
     },
-
     {
         name: "Thẩm Dịch",
         job: "Kiến trúc sư",
         personality: "Trầm lặng, tinh tế"
     },
-
     {
         name: "Giang Hàn",
         job: "Cảnh sát",
         personality: "Chính trực, nghiêm túc"
     },
-
     {
         name: "Trình Dật",
         job: "Nhà sản xuất âm nhạc",
         personality: "Tự do, phóng khoáng"
     },
-
     {
         name: "Phó Cảnh Thâm",
         job: "Chủ tịch tập đoàn",
         personality: "Kiêu ngạo, quyền lực"
     },
-
     {
         name: "Tạ Minh Triết",
         job: "Giáo sư đại học",
         personality: "Thông minh, trưởng thành"
     },
-
     {
         name: "Hứa Ngôn",
         job: "Nhiếp ảnh gia",
         personality: "Dịu dàng, nghệ sĩ"
     },
-
     {
         name: "Kỷ Thần",
         job: "Nhà đầu tư",
         personality: "Thực tế, khó đoán"
     },
-
     {
         name: "Mộ Dung Trạch",
         job: "Chủ chuỗi nhà hàng",
         personality: "Hài hước, tinh tế"
     },
-
     {
         name: "Bạch Tử Khiêm",
         job: "Diễn viên nổi tiếng",
         personality: "Khó gần, nổi bật"
     },
-
     {
         name: "Đường Cảnh Nhiên",
         job: "Bác sĩ phẫu thuật",
         personality: "Lạnh ngoài, ấm trong"
     },
-
     {
         name: "Tống Duy",
         job: "Nhà báo",
         personality: "Chính trực, tò mò"
     },
-
     {
-        name: "Lâm Mặc",
-        job: "Lập trình viên / CEO startup",
-        personality: "Ít nói, thông minh"
-    },
-
-    {
-        name: "Chu Cảnh Thần",
-        job: "Phi công",
-        personality: "Tự tin, điềm đạm"
-    },
-
-    {
-        name: "Hạ Thừa Vũ",
-        job: "CEO công ty giải trí",
-        personality: "Khôn ngoan, khó đoán"
-    },
-
-    {
-        name: "Tô Dịch",
-        job: "Nhà thiết kế thời trang",
-        personality: "Thanh lịch, cầu toàn"
-    },
-
-    {
-        name: "Thẩm Quân",
-        job: "Doanh nhân",
-        personality: "Bí ẩn, khó nắm bắt"
-    },
-
-    {
-        name: "Lục Cảnh Hoài",
-        job: "Người thừa kế tập đoàn",
-        personality: "Kiêu ngạo nhưng tình cảm"
-    }
-];
-
-
-/* =========================================================
-   GAME STATE
-========================================================= */
-
-let game = {
-
-    playerName: "",
-
-    identity: "",
-
-    personality: "",
-
-    maleLead: null,
-
-    day: 1,
-
-    affection: 0,
-
-    money: 1000,
-
-    intelligence: 50,
-
-    reputation: 50,
-
-    storyStep: 0,
-
-    ended: false
-
-};
-
-
-/* =========================================================
-   UTILITY
-========================================================= */
-
-function randomItem(array) {
-
-    return array[
-        Math.floor(
-            Math.random() * array.length
-        )
-    ];
-
-}
-
-
-function clamp(value, min, max) {
-
-    return Math.max(
-        min,
-        Math.min(max, value)
-    );
-
-}
-
-
-/* =========================================================
-   SCREEN
-========================================================= */
-
-function showScreen(id) {
-
-    document
-        .querySelectorAll(".screen")
-        .forEach(screen => {
-
-            screen.classList.remove("active");
-
-        });
-
-    document
-        .getElementById(id)
-        .classList.add("active");
-
-}
-
-
-/* =========================================================
-   START
-========================================================= */
-
-function startGame() {
-
-    showScreen("createScreen");
-
-}
-
-
-/* =========================================================
-   CREATE CHARACTER
-========================================================= */
-
-function createCharacter() {
-
-    const input =
-        document.getElementById("playerName");
-
-    let name =
-        input.value.trim();
-
-    if (!name) {
-
-        alert("Hãy nhập tên nhân vật.");
-
-        return;
-
-    }
-
-
-    game = {
-
-        playerName: name,
-
-        identity: randomItem(identities),
-
-        personality: randomItem(personalities),
-
-        maleLead: randomItem(maleLeads),
-
-        day: 1,
-
-        affection: Math.floor(Math.random() * 11),
-
-        money: 1000 + Math.floor(Math.random() * 4001),
-
-        intelligence: 40 + Math.floor(Math.random() * 31),
-
-        reputation: 40 + Math.floor(Math.random() * 31),
-
-        storyStep: 0,
-
-        ended: false
-
-    };
-
-
-    updateCharacterScreen();
-
-    showScreen("characterScreen");
-
-}
-
-
-/* =========================================================
-   CHARACTER SCREEN
-========================================================= */
-
-function updateCharacterScreen() {
-
-    document.getElementById(
-        "characterName"
-    ).textContent =
-        game.playerName;
-
-
-    document.getElementById(
-        "identityText"
-    ).textContent =
-        game.identity;
-
-
-    document.getElementById(
-        "personalityText"
-    ).textContent =
-        game.personality;
-
-
-    document.getElementById(
-        "maleLeadText"
-    ).textContent =
-        game.maleLead.name;
-
-
-    document.getElementById(
-        "affectionStat"
-    ).textContent =
-        game.affection;
-
-
-    document.getElementById(
-        "moneyStat"
-    ).textContent =
-        game.money;
-
-
-    document.getElementById(
-        "intelligenceStat"
-    ).textContent =
-        game.intelligence;
-
-
-    document.getElementById(
-        "reputationStat"
-    ).textContent =
-        game.reputation;
-
-}
-
-
-/* =========================================================
-   BEGIN STORY
-========================================================= */
-
-function beginStory() {
-
-    showScreen("gameScreen");
-
-    renderScene();
-
-}
-
-
-/* =========================================================
-   UPDATE STATS
-========================================================= */
-
-function updateStats() {
-
-    game.affection =
-        clamp(game.affection, 0, 100);
-
-    game.money =
-        Math.max(0, game.money);
-
-    game.intelligence =
-        clamp(game.intelligence, 0, 100);
-
-    game.reputation =
-        clamp(game.reputation, 0, 100);
-
-
-    document.getElementById(
-        "dayText"
-    ).textContent =
-        "Ngày " + game.day;
-
-
-    document.getElementById(
-        "gameAffection"
-    ).textContent =
-        game.affection;
-
-
-    document.getElementById(
-        "gameMoney"
-    ).textContent =
-        game.money;
-
-
-    document.getElementById(
-        "gameIntelligence"
-    ).textContent =
-        game.intelligence;
-
-
-    document.getElementById(
-        "gameReputation"
-    ).textContent =
-        game.reputation;
-
-}
-
-
-/* =========================================================
-   STORY SCENES
-========================================================= */
-
-function renderScene() {
-
-    updateStats();
-
-
-    const storyText =
-        document.getElementById("storyText");
-
-    const sceneTitle =
-        document.getElementById("sceneTitle");
-
-    const chapterText =
-        document.getElementById("chapterText");
-
-    const choices =
-        document.getElementById("choicesContainer");
-
-
-    choices.innerHTML = "";
-
-
-    /* ---------------------------------
-       SCENE 0
-    ---------------------------------- */
-
-    if (game.storyStep === 0) {
-
-        chapterText.textContent =
-            "CHƯƠNG 1";
-
-        sceneTitle.textContent =
-            "MỞ MẮT";
-
-
-        storyText.textContent =
-
-`Một cảm giác kỳ lạ kéo bạn ra khỏi giấc ngủ.
-
-Bạn mở mắt.
-
-Căn phòng quen thuộc đến mức khiến tim bạn khựng lại.
-
-Đây là...
-
-nhiều năm trước.
-
-Một thời điểm mà bạn từng nghĩ mình sẽ không bao giờ được quay lại.
-
-Trong ký ức của kiếp trước, có quá nhiều điều bạn đã làm sai.
-
-Nhưng lần này...
-
-bạn có cơ hội lựa chọn lại.`;
-
-
-        addChoice(
-            "Bình tĩnh quan sát mọi thứ.",
-            () => {
-
-                game.intelligence += 5;
-
-                nextScene();
-
-            }
-        );
-
-
-        addChoice(
-            "Kiểm tra điện thoại ngay lập tức.",
-            () => {
-
-                game.reputation += 3;
-
-                nextScene();
-
-            }
-        );
-
-
-        addChoice(
-            "Tự nhủ rằng tất cả chỉ là một giấc mơ.",
-            () => {
-
-                game.affection += 3;
-
-                nextScene();
-
-            }
-        );
-
-
-        return;
-    }
-
-
-    /* ---------------------------------
-       SCENE 1
-    ---------------------------------- */
-
-    if (game.storyStep === 1) {
-
-        chapterText.textContent =
-            "CHƯƠNG 1";
-
-        sceneTitle.textContent =
-            "CÁI TÊN QUEN THUỘC";
-
-
-        storyText.textContent =
-
-`Điện thoại trên bàn sáng lên.
-
-Một cái tên xuất hiện trên màn hình.
-
-${game.maleLead.name}.
-
-Ở kiếp trước, cái tên này từng xuất hiện trong cuộc đời bạn theo một cách mà bạn không thể quên.
-
-Nhưng ở hiện tại...
-
-mọi thứ vẫn chưa bắt đầu.
-
-Bạn vẫn còn thời gian để thay đổi.`;
+        name: "L`;
 
 
         addChoice(
