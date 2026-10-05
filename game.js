@@ -1,26 +1,33 @@
 /* =========================================================
-   TRÙNG SINH — GAME PROTOTYPE
-========================================================= */
+   TRÙNG SINH — KIẾP NÀY TA CHỌN AI?
+   GAME.JS
+   ========================================================= */
 
+const SAVE_KEY = "trungSinhGameSave_v2";
 
-/* =========================================================
-   DỮ LIỆU
-========================================================= */
+/* =========================
+   DỮ LIỆU NHÂN VẬT
+========================= */
 
 const identities = [
     "Thiên kim tập đoàn",
+    "Con gái gia đình chính trị",
+    "Con gái gia đình nghệ thuật",
+    "Con gái nhà giàu sa sút",
+    "Thiên kim thất lạc",
     "Sinh viên đại học",
-    "Nhà thiết kế trẻ",
+    "Sinh viên ưu tú",
     "Nhân viên văn phòng",
+    "Nhân viên mới vào nghề",
     "Chủ cửa hàng nhỏ",
+    "Nhà thiết kế",
+    "Nhiếp ảnh gia",
     "Ca sĩ mới debut",
     "Diễn viên vô danh",
-    "Nhiếp ảnh gia",
     "Người sáng tạo nội dung",
-    "Nhà báo trẻ",
+    "Nhà báo",
     "Luật sư tập sự",
-    "Con gái gia đình nghệ thuật",
-    "Thiên kim thất lạc",
+    "Bác sĩ tập sự",
     "Người thừa kế bí ẩn",
     "Người bình thường"
 ];
@@ -48,543 +55,429 @@ const personalities = [
     "Bí ẩn"
 ];
 
+const pastLives = [
+    "bị người yêu phản bội",
+    "bị bạn thân lợi dụng",
+    "bị gia đình bỏ rơi",
+    "sự nghiệp thất bại",
+    "bị vu oan",
+    "mất đi tài sản quan trọng",
+    "bị ép bước vào một cuộc hôn nhân không mong muốn",
+    "tin nhầm một người",
+    "bỏ lỡ người mình thực sự trân trọng",
+    "bị đồng nghiệp hãm hại",
+    "bị đối thủ phá hỏng sự nghiệp",
+    "một bí mật gia đình bị che giấu",
+    "bị lợi dụng trong cuộc tranh giành quyền lực",
+    "mất đi một người quan trọng",
+    "vướng vào một scandal lớn",
+    "bị phản bội bởi người mình tin tưởng nhất",
+    "phát hiện thân phận thật của mình quá muộn",
+    "phát hiện người mình yêu đang che giấu một bí mật",
+    "đánh mất một cơ hội có thể thay đổi cuộc đời",
+    "không nhớ rõ chuyện gì đã xảy ra trước khi qua đời"
+];
+
+const relationships = [
+    "Chưa từng gặp",
+    "Bạn cùng trường",
+    "Đồng nghiệp",
+    "Cấp trên — cấp dưới",
+    "Đối tác",
+    "Hàng xóm",
+    "Bạn của bạn thân",
+    "Từng gặp một lần",
+    "Có ấn tượng không tốt",
+    "Anh ấy từng giúp bạn",
+    "Bạn từng giúp anh ấy",
+    "Từng có một cuộc tranh luận",
+    "Hai gia đình quen biết",
+    "Đối thủ trong công việc",
+    "Hợp tác theo thỏa thuận",
+    "Bạn cũ",
+    "Anh ấy không nhớ bạn",
+    "Bạn không nhớ anh ấy",
+    "Hai người từng có tình cảm ở kiếp trước",
+    "Anh ấy từng âm thầm quan tâm bạn"
+];
+
+/* =========================
+   20 NAM CHÍNH
+========================= */
+
 const maleLeads = [
-    {
-        name: "Lục Đình Khâm",
-        job: "CEO tập đoàn",
-        personality: "Lạnh lùng, quyết đoán"
-    },
-    {
-        name: "Tần Mặc",
-        job: "Bác sĩ",
-        personality: "Điềm tĩnh, dịu dàng"
-    },
-    {
-        name: "Cố Thừa Ngôn",
-        job: "Luật sư",
-        personality: "Lý trí, sắc bén"
-    },
-    {
-        name: "Thẩm Dịch",
-        job: "Kiến trúc sư",
-        personality: "Trầm lặng, tinh tế"
-    },
-    {
-        name: "Giang Hàn",
-        job: "Cảnh sát",
-        personality: "Chính trực, nghiêm túc"
-    },
-    {
-        name: "Trình Dật",
-        job: "Nhà sản xuất âm nhạc",
-        personality: "Tự do, phóng khoáng"
-    },
-    {
-        name: "Phó Cảnh Thâm",
-        job: "Chủ tịch tập đoàn",
-        personality: "Kiêu ngạo, quyền lực"
-    },
-    {
-        name: "Tạ Minh Triết",
-        job: "Giáo sư đại học",
-        personality: "Thông minh, trưởng thành"
-    },
-    {
-        name: "Hứa Ngôn",
-        job: "Nhiếp ảnh gia",
-        personality: "Dịu dàng, nghệ sĩ"
-    },
-    {
-        name: "Kỷ Thần",
-        job: "Nhà đầu tư",
-        personality: "Thực tế, khó đoán"
-    },
-    {
-        name: "Mộ Dung Trạch",
-        job: "Chủ chuỗi nhà hàng",
-        personality: "Hài hước, tinh tế"
-    },
-    {
-        name: "Bạch Tử Khiêm",
-        job: "Diễn viên nổi tiếng",
-        personality: "Khó gần, nổi bật"
-    },
-    {
-        name: "Đường Cảnh Nhiên",
-        job: "Bác sĩ phẫu thuật",
-        personality: "Lạnh ngoài, ấm trong"
-    },
-    {
-        name: "Tống Duy",
-        job: "Nhà báo",
-        personality: "Chính trực, tò mò"
-    },
-    {
-        name: "L`;
+    ["Lục Đình Khâm", "CEO tập đoàn", "Lạnh lùng, quyết đoán"],
+    ["Tần Mặc", "Bác sĩ", "Điềm tĩnh, dịu dàng"],
+    ["Cố Thừa Ngôn", "Luật sư", "Lý trí, sắc bén"],
+    ["Thẩm Dịch", "Kiến trúc sư", "Trầm lặng, tinh tế"],
+    ["Giang Hàn", "Cảnh sát", "Chính trực, nghiêm túc"],
+    ["Trình Dật", "Nhà sản xuất âm nhạc", "Tự do, phóng khoáng"],
+    ["Phó Cảnh Thâm", "Chủ tịch tập đoàn", "Kiêu ngạo, quyền lực"],
+    ["Tạ Minh Triết", "Giảng viên đại học", "Thông minh, trưởng thành"],
+    ["Hứa Ngôn", "Nhiếp ảnh gia", "Dịu dàng, nghệ sĩ"],
+    ["Kỷ Thần", "Nhà đầu tư", "Thực tế, khó đoán"],
+    ["Mộ Dung Trạch", "Chủ chuỗi nhà hàng", "Hài hước, tinh tế"],
+    ["Bạch Tử Khiêm", "Diễn viên nổi tiếng", "Khó gần, chuyên nghiệp"],
+    ["Đường Cảnh Nhiên", "Bác sĩ phẫu thuật", "Lạnh ngoài, ấm trong"],
+    ["Tống Duy", "Nhà báo", "Chính trực, tò mò"],
+    ["Lâm Mặc", "Lập trình viên / chủ startup", "Ít nói, thông minh"],
+    ["Chu Cảnh Thần", "Phi công", "Tự tin, điềm đạm"],
+    ["Hạ Thừa Vũ", "CEO công ty giải trí", "Khôn ngoan, khó đoán"],
+    ["Tô Dịch", "Nhà thiết kế thời trang", "Thanh lịch, cầu toàn"],
+    ["Thẩm Quân", "Doanh nhân", "Bí ẩn, khó nắm bắt"],
+    ["Lục Cảnh Hoài", "Người thừa kế tập đoàn", "Kiêu ngạo, trẻ con nhưng tình cảm"]
+];
 
+/* =========================
+   CÁC CHƯƠNG
+========================= */
 
-        addChoice(
-            "Chủ động nhắn tin.",
-            () => {
+const scenes = [
 
-                game.affection += 10;
+    {
+        chapter: "CHƯƠNG 1 — NGÀY THỨ NHẤT",
+        title: "MỞ MẮT",
 
-                nextScene();
+        text: function(g) {
+            return `Một cảm giác quen thuộc kéo bạn trở về với hiện tại.
 
+Bạn tên là ${g.name}.
+
+Kiếp này, bạn mang thân phận ${g.identity.toLowerCase()} và có tính cách ${g.personality.toLowerCase()}.
+
+Điều duy nhất bạn nhớ rõ là:
+
+Kiếp trước, bạn ${g.pastLife}.
+
+Lần này...
+
+Mọi thứ vẫn còn kịp để thay đổi.
+
+Người có thể trở thành nhân vật quan trọng nhất trong kiếp này là ${g.maleLead[0]} — ${g.maleLead[1]}.`;
+        },
+
+        choices: [
+            {
+                text: "Bình tĩnh quan sát mọi thứ trước.",
+                effect: {
+                    intelligence: 3,
+                    reputation: 1
+                }
+            },
+
+            {
+                text: "Lập tức tìm cách thay đổi những chuyện mình nhớ được.",
+                effect: {
+                    willpower: 3,
+                    money: 1
+                }
+            },
+
+            {
+                text: "Tập trung xây dựng lại cuộc sống của mình.",
+                effect: {
+                    money: 2,
+                    reputation: 2
+                }
             }
-        );
+        ]
+    },
 
 
-        addChoice(
-            "Không liên lạc. Tập trung vào bản thân.",
-            () => {
+    {
+        chapter: "CHƯƠNG 1",
+        title: "MỘT CƠ HỘI KHÁC",
 
-                game.intelligence += 5;
+        text: function(g) {
+            return `Ngày đầu tiên của kiếp mới trôi qua trong sự bình lặng.
 
-                game.reputation += 5;
+Bạn nhận ra mình không cần lặp lại từng lựa chọn cũ.
 
-                nextScene();
+Trong điện thoại xuất hiện một lời mời liên quan đến công việc.
 
+Cùng lúc đó, một cuộc hẹn có liên quan đến ${g.maleLead[0]} cũng xuất hiện.
+
+Quan hệ ban đầu giữa hai người:
+
+${g.relationship}.`;
+        },
+
+        choices: [
+            {
+                text: "Ưu tiên công việc.",
+                effect: {
+                    money: 3,
+                    intelligence: 2,
+                    reputation: 1
+                }
+            },
+
+            {
+                text: "Đồng ý gặp ${g.maleLead[0]} để tìm hiểu tình hình.",
+                effect: {
+                    affection: 5,
+                    reputation: 1
+                }
+            },
+
+            {
+                text: "Không vội lựa chọn. Thu thập thêm thông tin.",
+                effect: {
+                    intelligence: 4,
+                    affection: 2
+                }
             }
-        );
+        ]
+    },
 
 
-        addChoice(
-            "Tìm hiểu thông tin về anh ấy trước.",
-            () => {
+    {
+        chapter: "CHƯƠNG 2",
+        title: "LỰA CHỌN ĐẦU TIÊN",
 
-                game.intelligence += 8;
+        text: function(g) {
+            return `${g.maleLead[0]} xuất hiện trong một tình huống hoàn toàn khác với ký ức của bạn.
 
-                nextScene();
+Anh ấy không biết rằng bạn đã từng sống qua một cuộc đời khác.
 
+Bạn có thể lựa chọn cách mình muốn bước vào mối quan hệ này.
+
+Nhưng không có lựa chọn nào đảm bảo kết quả.`;
+        },
+
+        choices: [
+            {
+                text: "Giữ khoảng cách và quan sát.",
+                effect: {
+                    intelligence: 3,
+                    affection: 2
+                }
+            },
+
+            {
+                text: "Chủ động nói chuyện một cách thẳng thắn.",
+                effect: {
+                    affection: 7,
+                    reputation: 1
+                }
+            },
+
+            {
+                text: "Tập trung vào mục tiêu riêng.",
+                effect: {
+                    money: 2,
+                    intelligence: 3,
+                    reputation: 2
+                }
             }
-        );
+        ]
+    },
 
 
-        return;
+    {
+        chapter: "CHƯƠNG 2",
+        title: "BƯỚC NGOẶT",
+
+        text: function(g) {
+            return `Một chuyện bất ngờ xảy ra.
+
+Nếu là bạn của kiếp trước, có lẽ bạn sẽ lựa chọn theo thói quen.
+
+Nhưng đây là kiếp mới.
+
+${g.maleLead[0]} đang chờ câu trả lời của bạn.
+
+Trong khi đó, một cơ hội nghề nghiệp quan trọng cũng xuất hiện cùng lúc.`;
+        },
+
+        choices: [
+            {
+                text: "Chọn cơ hội nghề nghiệp.",
+                effect: {
+                    money: 5,
+                    reputation: 4,
+                    intelligence: 1
+                }
+            },
+
+            {
+                text: "Giải quyết chuyện đang xảy ra với ${g.maleLead[0]}.",
+                effect: {
+                    affection: 9,
+                    reputation: 1
+                }
+            },
+
+            {
+                text: "Tìm cách cân bằng cả hai.",
+                effect: {
+                    intelligence: 4,
+                    affection: 4,
+                    money: 2
+                }
+            }
+        ]
+    },
+
+
+    {
+        chapter: "CHƯƠNG 3",
+        title: "KÝ ỨC KHÔNG CÒN GIỐNG NHAU",
+
+        text: function() {
+            return `Bạn bắt đầu nhận ra một điều đáng sợ nhưng cũng đầy hy vọng:
+
+Những gì từng xảy ra ở kiếp trước không còn hoàn toàn đúng nữa.
+
+Chỉ một quyết định nhỏ cũng có thể tạo ra một tương lai khác.
+
+Và lần đầu tiên...
+
+Bạn không còn muốn sống theo một kết thúc đã được viết sẵn.`;
+        },
+
+        choices: [
+            {
+                text: "Tin vào chính mình.",
+                effect: {
+                    intelligence: 4,
+                    reputation: 3,
+                    willpower: 3
+                }
+            },
+
+            {
+                text: "Tin vào người đã đồng hành cùng mình.",
+                effect: {
+                    affection: 10,
+                    reputation: 1
+                }
+            },
+
+            {
+                text: "Tự mình mở ra một con đường hoàn toàn mới.",
+                effect: {
+                    money: 4,
+                    intelligence: 4,
+                    reputation: 4
+                }
+            }
+        ]
+    },
+
+
+    {
+        chapter: "CHƯƠNG 4",
+        title: "KIẾP NÀY",
+
+        text: function(g) {
+            return `Thời gian đã đủ để chứng minh rằng bạn thật sự đang sống một cuộc đời khác.
+
+${g.name} không còn là người của kiếp trước.
+
+Những lựa chọn bạn đưa ra đã thay đổi công việc, các mối quan hệ và tương lai.
+
+Đây chưa phải kết thúc...
+
+Nhưng là thời điểm số phận bắt đầu trả lời.`;
+        },
+
+        choices: [
+            {
+                text: "Khép lại một kiếp sống mới.",
+                effect: {
+                    reputation: 2,
+                    intelligence: 2
+                },
+                ending: true
+            },
+
+            {
+                text: "Đặt niềm tin vào người đã trở nên quan trọng.",
+                effect: {
+                    affection: 12
+                },
+                ending: true
+            },
+
+            {
+                text: "Chọn con đường độc lập của riêng mình.",
+                effect: {
+                    money: 5,
+                    intelligence: 5,
+                    reputation: 5
+                },
+                ending: true
+            }
+        ]
     }
 
-
-    /* ---------------------------------
-       SCENE 2
-    ---------------------------------- */
-
-    if (game.storyStep === 2) {
-
-        chapterText.textContent =
-            "CHƯƠNG 1";
-
-        sceneTitle.textContent =
-            "LỰA CHỌN ĐẦU TIÊN";
+];
 
 
-        storyText.textContent =
+/* =========================
+   GAME STATE
+========================= */
 
-`Buổi sáng trôi qua.
-
-Bạn nhận ra một điều:
-
-Kiếp này, bạn không còn muốn sống theo những lựa chọn của người khác.
-
-Bạn có thể theo đuổi sự nghiệp.
-
-Bạn có thể xây dựng các mối quan hệ.
-
-Bạn có thể tìm lại người từng bỏ lỡ.
-
-Hoặc...
-
-bạn có thể tự viết một cuộc đời hoàn toàn khác.`;
+let game = null;
 
 
-        addChoice(
-            "Tập trung xây dựng sự nghiệp.",
-            () => {
+/* =========================
+   HELPER
+========================= */
 
-                game.intelligence += 10;
-
-                game.reputation += 5;
-
-                nextScene();
-
-            }
-        );
+function $(id) {
+    return document.getElementById(id);
+}
 
 
-        addChoice(
-            "Tìm cách gặp nam chính.",
-            () => {
-
-                game.affection += 15;
-
-                nextScene();
-
-            }
-        );
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
 
 
-        addChoice(
-            "Kết bạn và mở rộng quan hệ.",
-            () => {
-
-                game.reputation += 10;
-
-                game.money += 500;
-
-                nextScene();
-
-            }
-        );
+function randomItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
 
 
-        addChoice(
-            "Ở nhà nghỉ ngơi và suy nghĩ.",
-            () => {
-
-                game.intelligence += 3;
-
-                nextScene();
-
-            }
-        );
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 
-        return;
+/* =========================
+   CHUYỂN SCREEN
+========================= */
+
+function showScreen(id) {
+
+    document.querySelectorAll(".screen").forEach(function(screen) {
+        screen.classList.remove("active");
+    });
+
+    const target = $(id);
+
+    if (target) {
+        target.classList.add("active");
     }
 
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
 
-    /* ---------------------------------
-       SCENE 3
-    ---------------------------------- */
 
-    if (game.storyStep === 3) {
+/* =========================
+   BẮT ĐẦU GAME
+========================= */
 
-        chapterText.textContent =
-            "CHƯƠNG 2";
+function startGame() {
 
-        sceneTitle.textContent =
-            "CUỘC GẶP ĐẦU TIÊN";
+    showScreen("createScreen");
 
-
-        storyText.textContent =
-
-`Chiều hôm đó.
-
-Bạn bước vào một nơi hoàn toàn khác với ký ức của kiếp trước.
-
-Và rồi...
-
-bạn nhìn thấy ${game.maleLead.name}.
-
-Anh ấy đang đứng cách bạn không xa.
-
-Ánh mắt hai người chạm nhau.
-
-Chỉ vài giây.
-
-Nhưng lần này, bạn biết mình có thể lựa chọn cách cuộc gặp này sẽ diễn ra.`;
-
-
-        addChoice(
-            "Chủ động chào hỏi.",
-            () => {
-
-                game.affection += 12;
-
-                nextScene();
-
-            }
-        );
-
-
-        addChoice(
-            "Mỉm cười rồi bước qua.",
-            () => {
-
-                game.reputation += 5;
-
-                nextScene();
-
-            }
-        );
-
-
-        addChoice(
-            "Quan sát anh ấy từ xa.",
-            () => {
-
-                game.intelligence += 5;
-
-                nextScene();
-
-            }
-        );
-
-
-        return;
-    }
-
-
-    /* ---------------------------------
-       SCENE 4
-    ---------------------------------- */
-
-    if (game.storyStep === 4) {
-
-        chapterText.textContent =
-            "CHƯƠNG 2";
-
-        sceneTitle.textContent =
-            "MỘT CƠ HỘI";
-
-
-        storyText.textContent =
-
-`Một cơ hội bất ngờ xuất hiện.
-
-Nếu nắm lấy, bạn có thể thay đổi vị trí của mình trong xã hội.
-
-Nhưng cơ hội nào cũng có cái giá của nó.
-
-Bạn muốn lựa chọn điều gì?`;
-
-
-        addChoice(
-            "Nhận cơ hội.",
-            () => {
-
-                game.money += 1500;
-
-                game.reputation += 8;
-
-                nextScene();
-
-            }
-        );
-
-
-        addChoice(
-            "Từ chối và chọn con đường riêng.",
-            () => {
-
-                game.intelligence += 10;
-
-                nextScene();
-
-            }
-        );
-
-
-        addChoice(
-            "Hỏi ý kiến ${game.maleLead.name}.",
-            () => {
-
-                game.affection += 10;
-
-                nextScene();
-
-            }
-        );
-
-
-        return;
-    }
-
-
-    /* ---------------------------------
-       SCENE 5
-    ---------------------------------- */
-
-    if (game.storyStep === 5) {
-
-        chapterText.textContent =
-            "CHƯƠNG 3";
-
-        sceneTitle.textContent =
-            "ĐÊM ĐẦU TIÊN";
-
-
-        storyText.textContent =
-
-`Đêm xuống.
-
-Bạn ngồi trước cửa sổ và nhìn thành phố.
-
-Kiếp trước đã kết thúc.
-
-Kiếp này vừa mới bắt đầu.
-
-Bạn chợt nhận ra rằng tương lai không còn là một con đường cố định.
-
-Mỗi lựa chọn của bạn đều đang tạo ra một phiên bản khác của cuộc đời.`;
-
-
-        addChoice(
-            "Theo đuổi tình cảm.",
-            () => {
-
-                game.affection += 15;
-
-                nextScene();
-
-            }
-        );
-
-
-        addChoice(
-            "Theo đuổi sự nghiệp.",
-            () => {
-
-                game.money += 1000;
-
-                game.intelligence += 8;
-
-                nextScene();
-
-            }
-        );
-
-
-        addChoice(
-            "Không phụ thuộc vào bất kỳ ai.",
-            () => {
-
-                game.reputation += 10;
-
-                game.intelligence += 10;
-
-                nextScene();
-
-            }
-        );
-
-
-        return;
-    }
-
-
-    /* ---------------------------------
-       SCENE 6
-    ---------------------------------- */
-
-    if (game.storyStep === 6) {
-
-        chapterText.textContent =
-            "CHƯƠNG 4";
-
-        sceneTitle.textContent =
-            "BƯỚC NGOẶT";
-
-
-        storyText.textContent =
-
-`Một sự kiện bất ngờ xảy ra.
-
-Thông tin về bạn bắt đầu xuất hiện trên mạng xã hội.
-
-Có người ủng hộ.
-
-Có người nghi ngờ.
-
-Và có người muốn lợi dụng điều đó.`;
-
-
-        addChoice(
-            "Lên tiếng bảo vệ bản thân.",
-            () => {
-
-                game.reputation += 15;
-
-                nextScene();
-
-            }
-        );
-
-
-        addChoice(
-            "Im lặng và quan sát.",
-            () => {
-
-                game.intelligence += 12;
-
-                nextScene();
-
-            }
-        );
-
-
-        addChoice(
-            "Nhờ ${game.maleLead.name} giúp đỡ.",
-            () => {
-
-                game.affection += 15;
-
-                nextScene();
-
-            }
-        );
-
-
-        return;
-    }
-
-
-    /* ---------------------------------
-       SCENE 7
-    ---------------------------------- */
-
-    if (game.storyStep === 7) {
-
-        chapterText.textContent =
-            "CHƯƠNG 5";
-
-        sceneTitle.textContent =
-            "LỰA CHỌN CUỐI CÙNG";
-
-
-        storyText.textContent =
-
-`Bạn đứng trước một quyết định quan trọng.
-
-Bạn đã đi được một đoạn đường rất xa.
-
-Con người của bạn đã khác.
-
-Cuộc đời của bạn cũng đã khác.
-
-Nếu ngày mai là ngày cuối cùng của câu chuyện này...
-
-bạn muốn mình trở thành ai?`;
-
-
-        addChoice(
-            "Ở bên người mình yêu.",
-            () => {
-
-                game.affection += 20;
-
-                endGame();
-
-            }
-        );
-
-
-        addChoice(
-            "Trở thành người thành công.",
-            () => {
-
-                game.money += 3000;
-
-                game.reputation += 20;
-
-                endGame();
-
-            }
-        );
-
-
-        addChoice(
-            "Tự do sống cuộc đời mình.",
+      "Tự do sống cuộc đời mình.",
             () => {
 
                 game.intelligence += 15;
