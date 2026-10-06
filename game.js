@@ -1,109 +1,7 @@
 /* =========================================================
    TRÙNG SINH — KIẾP NÀY TA CHỌN AI?
-   GAME.JS
-   ========================================================= */
-
-const SAVE_KEY = "trungSinhGameSave_v2";
-
-/* =========================
-   DỮ LIỆU NHÂN VẬT
-========================= */
-
-const identities = [
-    "Thiên kim tập đoàn",
-    "Con gái gia đình chính trị",
-    "Con gái gia đình nghệ thuật",
-    "Con gái nhà giàu sa sút",
-    "Thiên kim thất lạc",
-    "Sinh viên đại học",
-    "Sinh viên ưu tú",
-    "Nhân viên văn phòng",
-    "Nhân viên mới vào nghề",
-    "Chủ cửa hàng nhỏ",
-    "Nhà thiết kế",
-    "Nhiếp ảnh gia",
-    "Ca sĩ mới debut",
-    "Diễn viên vô danh",
-    "Người sáng tạo nội dung",
-    "Nhà báo",
-    "Luật sư tập sự",
-    "Bác sĩ tập sự",
-    "Người thừa kế bí ẩn",
-    "Người bình thường"
-];
-
-const personalities = [
-    "Dịu dàng",
-    "Lạnh lùng",
-    "Hướng ngoại",
-    "Hướng nội",
-    "Thẳng thắn",
-    "Khéo léo",
-    "Thông minh",
-    "Ngây thơ",
-    "Tinh nghịch",
-    "Kiêu ngạo",
-    "Mạnh mẽ",
-    "Nhạy cảm",
-    "Điềm tĩnh",
-    "Bốc đồng",
-    "Tham vọng",
-    "Lạc quan",
-    "Đa nghi",
-    "Tốt bụng",
-    "Thực tế",
-    "Bí ẩn"
-];
-
-const pastLives = [
-    "bị người yêu phản bội",
-    "bị bạn thân lợi dụng",
-    "bị gia đình bỏ rơi",
-    "sự nghiệp thất bại",
-    "bị vu oan",
-    "mất đi tài sản quan trọng",
-    "bị ép bước vào một cuộc hôn nhân không mong muốn",
-    "tin nhầm một người",
-    "bỏ lỡ người mình thực sự trân trọng",
-    "bị đồng nghiệp hãm hại",
-    "bị đối thủ phá hỏng sự nghiệp",
-    "một bí mật gia đình bị che giấu",
-    "bị lợi dụng trong cuộc tranh giành quyền lực",
-    "mất đi một người quan trọng",
-    "vướng vào một scandal lớn",
-    "bị phản bội bởi người mình tin tưởng nhất",
-    "phát hiện thân phận thật của mình quá muộn",
-    "phát hiện người mình yêu đang che giấu một bí mật",
-    "đánh mất một cơ hội có thể thay đổi cuộc đời",
-    "không nhớ rõ chuyện gì đã xảy ra trước khi qua đời"
-];
-
-const relationships = [
-    "Chưa từng gặp",
-    "Bạn cùng trường",
-    "Đồng nghiệp",
-    "Cấp trên — cấp dưới",
-    "Đối tác",
-    "Hàng xóm",
-    "Bạn của bạn thân",
-    "Từng gặp một lần",
-    "Có ấn tượng không tốt",
-    "Anh ấy từng giúp bạn",
-    "Bạn từng giúp anh ấy",
-    "Từng có một cuộc tranh luận",
-    "Hai gia đình quen biết",
-    "Đối thủ trong công việc",
-    "Hợp tác theo thỏa thuận",
-    "Bạn cũ",
-    "Anh ấy không nhớ bạn",
-    "Bạn không nhớ anh ấy",
-    "Hai người từng có tình cảm ở kiếp trước",
-    "Anh ấy từng âm thầm quan tâm bạn"
-];
-
-/* =========================
-   20 NAM CHÍNH
-========================= */
+   GAME ENGINE
+========================================================= */
 
 const maleLeads = [
     ["Lục Đình Khâm", "CEO tập đoàn", "Lạnh lùng, quyết đoán"],
@@ -120,7 +18,7 @@ const maleLeads = [
     ["Bạch Tử Khiêm", "Diễn viên nổi tiếng", "Khó gần, chuyên nghiệp"],
     ["Đường Cảnh Nhiên", "Bác sĩ phẫu thuật", "Lạnh ngoài, ấm trong"],
     ["Tống Duy", "Nhà báo", "Chính trực, tò mò"],
-    ["Lâm Mặc", "Lập trình viên / chủ startup", "Ít nói, thông minh"],
+    ["Lâm Mặc", "Lập trình viên / Founder", "Ít nói, thông minh"],
     ["Chu Cảnh Thần", "Phi công", "Tự tin, điềm đạm"],
     ["Hạ Thừa Vũ", "CEO công ty giải trí", "Khôn ngoan, khó đoán"],
     ["Tô Dịch", "Nhà thiết kế thời trang", "Thanh lịch, cầu toàn"],
@@ -128,959 +26,462 @@ const maleLeads = [
     ["Lục Cảnh Hoài", "Người thừa kế tập đoàn", "Kiêu ngạo, trẻ con nhưng tình cảm"]
 ];
 
-/* =========================
-   CÁC CHƯƠNG
-========================= */
-
-const scenes = [
-
-    {
-        chapter: "CHƯƠNG 1 — NGÀY THỨ NHẤT",
-        title: "MỞ MẮT",
-
-        text: function(g) {
-            return `Một cảm giác quen thuộc kéo bạn trở về với hiện tại.
-
-Bạn tên là ${g.name}.
-
-Kiếp này, bạn mang thân phận ${g.identity.toLowerCase()} và có tính cách ${g.personality.toLowerCase()}.
-
-Điều duy nhất bạn nhớ rõ là:
-
-Kiếp trước, bạn ${g.pastLife}.
-
-Lần này...
-
-Mọi thứ vẫn còn kịp để thay đổi.
-
-Người có thể trở thành nhân vật quan trọng nhất trong kiếp này là ${g.maleLead[0]} — ${g.maleLead[1]}.`;
-        },
-
-        choices: [
-            {
-                text: "Bình tĩnh quan sát mọi thứ trước.",
-                effect: {
-                    intelligence: 3,
-                    reputation: 1
-                }
-            },
-
-            {
-                text: "Lập tức tìm cách thay đổi những chuyện mình nhớ được.",
-                effect: {
-                    willpower: 3,
-                    money: 1
-                }
-            },
-
-            {
-                text: "Tập trung xây dựng lại cuộc sống của mình.",
-                effect: {
-                    money: 2,
-                    reputation: 2
-                }
-            }
-        ]
-    },
-
-
-    {
-        chapter: "CHƯƠNG 1",
-        title: "MỘT CƠ HỘI KHÁC",
-
-        text: function(g) {
-            return `Ngày đầu tiên của kiếp mới trôi qua trong sự bình lặng.
-
-Bạn nhận ra mình không cần lặp lại từng lựa chọn cũ.
-
-Trong điện thoại xuất hiện một lời mời liên quan đến công việc.
-
-Cùng lúc đó, một cuộc hẹn có liên quan đến ${g.maleLead[0]} cũng xuất hiện.
-
-Quan hệ ban đầu giữa hai người:
-
-${g.relationship}.`;
-        },
-
-        choices: [
-            {
-                text: "Ưu tiên công việc.",
-                effect: {
-                    money: 3,
-                    intelligence: 2,
-                    reputation: 1
-                }
-            },
-
-            {
-                text: "Đồng ý gặp ${g.maleLead[0]} để tìm hiểu tình hình.",
-                effect: {
-                    affection: 5,
-                    reputation: 1
-                }
-            },
-
-            {
-                text: "Không vội lựa chọn. Thu thập thêm thông tin.",
-                effect: {
-                    intelligence: 4,
-                    affection: 2
-                }
-            }
-        ]
-    },
-
-
-    {
-        chapter: "CHƯƠNG 2",
-        title: "LỰA CHỌN ĐẦU TIÊN",
-
-        text: function(g) {
-            return `${g.maleLead[0]} xuất hiện trong một tình huống hoàn toàn khác với ký ức của bạn.
-
-Anh ấy không biết rằng bạn đã từng sống qua một cuộc đời khác.
-
-Bạn có thể lựa chọn cách mình muốn bước vào mối quan hệ này.
-
-Nhưng không có lựa chọn nào đảm bảo kết quả.`;
-        },
-
-        choices: [
-            {
-                text: "Giữ khoảng cách và quan sát.",
-                effect: {
-                    intelligence: 3,
-                    affection: 2
-                }
-            },
-
-            {
-                text: "Chủ động nói chuyện một cách thẳng thắn.",
-                effect: {
-                    affection: 7,
-                    reputation: 1
-                }
-            },
-
-            {
-                text: "Tập trung vào mục tiêu riêng.",
-                effect: {
-                    money: 2,
-                    intelligence: 3,
-                    reputation: 2
-                }
-            }
-        ]
-    },
-
-
-    {
-        chapter: "CHƯƠNG 2",
-        title: "BƯỚC NGOẶT",
-
-        text: function(g) {
-            return `Một chuyện bất ngờ xảy ra.
-
-Nếu là bạn của kiếp trước, có lẽ bạn sẽ lựa chọn theo thói quen.
-
-Nhưng đây là kiếp mới.
-
-${g.maleLead[0]} đang chờ câu trả lời của bạn.
-
-Trong khi đó, một cơ hội nghề nghiệp quan trọng cũng xuất hiện cùng lúc.`;
-        },
-
-        choices: [
-            {
-                text: "Chọn cơ hội nghề nghiệp.",
-                effect: {
-                    money: 5,
-                    reputation: 4,
-                    intelligence: 1
-                }
-            },
-
-            {
-                text: "Giải quyết chuyện đang xảy ra với ${g.maleLead[0]}.",
-                effect: {
-                    affection: 9,
-                    reputation: 1
-                }
-            },
-
-            {
-                text: "Tìm cách cân bằng cả hai.",
-                effect: {
-                    intelligence: 4,
-                    affection: 4,
-                    money: 2
-                }
-            }
-        ]
-    },
-
-
-    {
-        chapter: "CHƯƠNG 3",
-        title: "KÝ ỨC KHÔNG CÒN GIỐNG NHAU",
-
-        text: function() {
-            return `Bạn bắt đầu nhận ra một điều đáng sợ nhưng cũng đầy hy vọng:
-
-Những gì từng xảy ra ở kiếp trước không còn hoàn toàn đúng nữa.
-
-Chỉ một quyết định nhỏ cũng có thể tạo ra một tương lai khác.
-
-Và lần đầu tiên...
-
-Bạn không còn muốn sống theo một kết thúc đã được viết sẵn.`;
-        },
-
-        choices: [
-            {
-                text: "Tin vào chính mình.",
-                effect: {
-                    intelligence: 4,
-                    reputation: 3,
-                    willpower: 3
-                }
-            },
-
-            {
-                text: "Tin vào người đã đồng hành cùng mình.",
-                effect: {
-                    affection: 10,
-                    reputation: 1
-                }
-            },
-
-            {
-                text: "Tự mình mở ra một con đường hoàn toàn mới.",
-                effect: {
-                    money: 4,
-                    intelligence: 4,
-                    reputation: 4
-                }
-            }
-        ]
-    },
-
-
-    {
-        chapter: "CHƯƠNG 4",
-        title: "KIẾP NÀY",
-
-        text: function(g) {
-            return `Thời gian đã đủ để chứng minh rằng bạn thật sự đang sống một cuộc đời khác.
-
-${g.name} không còn là người của kiếp trước.
-
-Những lựa chọn bạn đưa ra đã thay đổi công việc, các mối quan hệ và tương lai.
-
-Đây chưa phải kết thúc...
-
-Nhưng là thời điểm số phận bắt đầu trả lời.`;
-        },
-
-        choices: [
-            {
-                text: "Khép lại một kiếp sống mới.",
-                effect: {
-                    reputation: 2,
-                    intelligence: 2
-                },
-                ending: true
-            },
-
-            {
-                text: "Đặt niềm tin vào người đã trở nên quan trọng.",
-                effect: {
-                    affection: 12
-                },
-                ending: true
-            },
-
-            {
-                text: "Chọn con đường độc lập của riêng mình.",
-                effect: {
-                    money: 5,
-                    intelligence: 5,
-                    reputation: 5
-                },
-                ending: true
-            }
-        ]
-    }
-
+const identities = [
+    "Con gái một gia đình danh giá",
+    "Sinh viên đại học bình thường",
+    "Tiểu thư nhà giàu bị thất sủng",
+    "Nữ diễn viên đang lên",
+    "Nhà thiết kế trẻ",
+    "Con gái của một doanh nhân",
+    "Nhân viên văn phòng bình thường",
+    "Người thừa kế một thương hiệu thời trang",
+    "Họa sĩ tự do",
+    "Chủ một cửa hàng nhỏ",
+    "Nữ sinh xuất thân từ gia đình bình dân",
+    "Con gái của một gia đình quyền thế",
+    "Nhà sáng tạo nội dung",
+    "Trợ lý trong một tập đoàn lớn",
+    "Nữ doanh nhân trẻ",
+    "Kiến trúc sư mới vào nghề",
+    "Ca sĩ mới debut",
+    "Nhà báo trẻ",
+    "Chủ một studio nghệ thuật",
+    "Người từng bị gia đình ruồng bỏ"
 ];
 
+const personalities = [
+    "Dịu dàng nhưng không yếu đuối",
+    "Mạnh mẽ và quyết đoán",
+    "Thông minh, sắc sảo",
+    "Hài hước và lạc quan",
+    "Trầm tĩnh, khó đoán",
+    "Thẳng thắn và chính trực",
+    "Tinh tế và nhạy cảm",
+    "Tự tin, có tham vọng",
+    "Độc lập và lý trí",
+    "Bướng bỉnh nhưng chân thành",
+    "Khéo léo và biết quan sát",
+    "Lạnh lùng với người ngoài",
+    "Ấm áp với người mình tin tưởng",
+    "Táo bạo và thích thử thách",
+    "Kiên nhẫn và điềm tĩnh",
+    "Có phần tinh nghịch",
+    "Cầu toàn và nghiêm túc",
+    "Sống tình cảm",
+    "Không dễ dàng tin người",
+    "Luôn muốn tự quyết định số phận"
+];
 
-/* =========================
-   GAME STATE
-========================= */
+const pastLives = [
+    "Kiếp trước bạn từng tin nhầm một người.",
+    "Kiếp trước bạn đã đánh mất cơ hội quan trọng nhất đời mình.",
+    "Kiếp trước bạn từng bị chính người thân phản bội.",
+    "Kiếp trước bạn lựa chọn tình yêu thay vì sự nghiệp.",
+    "Kiếp trước bạn đã sống một cuộc đời quá phụ thuộc vào người khác.",
+    "Kiếp trước bạn từng bỏ lỡ một người thật lòng với mình.",
+    "Kiếp trước bạn đã quá yếu đuối trước những lời phán xét.",
+    "Kiếp trước bạn từng có tất cả nhưng cuối cùng mất hết.",
+    "Kiếp trước bạn chưa từng được sống theo điều mình muốn.",
+    "Kiếp trước bạn đã đưa ra một quyết định khiến cả cuộc đời thay đổi."
+];
 
-let game = null;
+let game = {
+    name: "",
+    identity: "",
+    personality: "",
+    pastLife: "",
+    maleLead: null,
+
+    day: 1,
+    affection: 20,
+    money: 5000,
+    intelligence: 50,
+    reputation: 50,
+    willpower: 50,
+
+    chapter: 1,
+    scene: 0
+};
+
+let currentScene = null;
 
 
-/* =========================
-   HELPER
-========================= */
-
-function $(id) {
-    return document.getElementById(id);
-}
-
-
-function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-}
-
+/* =========================================================
+   TIỆN ÍCH
+========================================================= */
 
 function randomItem(array) {
     return array[Math.floor(Math.random() * array.length)];
 }
 
-
-function randomInt(min, max) {
+function randomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function get(id) {
+    return document.getElementById(id);
+}
 
-/* =========================
-   CHUYỂN SCREEN
-========================= */
+function showScreen(screenId) {
+    const screens = [
+        "startScreen",
+        "createScreen",
+        "characterScreen",
+        "gameScreen",
+        "endingScreen"
+    ];
 
-function showScreen(id) {
-
-    document.querySelectorAll(".screen").forEach(function(screen) {
-        screen.classList.remove("active");
+    screens.forEach(id => {
+        const element = get(id);
+        if (element) {
+            element.style.display = id === screenId ? "block" : "none";
+        }
     });
 
-    const target = $(id);
-
-    if (target) {
-        target.classList.add("active");
-    }
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+    window.scrollTo(0, 0);
 }
 
 
-/* =========================
+/* =========================================================
    BẮT ĐẦU GAME
-========================= */
+========================================================= */
 
 function startGame() {
-
     showScreen("createScreen");
 
-    setTimeout(function() {
+    const nameInput = get("playerName");
 
-        const input = $("playerName");
-
-        if (input) {
-            input.focus();
-        }
-
-    }, 250);
+    if (nameInput) {
+        setTimeout(() => nameInput.focus(), 200);
+    }
 }
 
 
-/* =========================
+/* =========================================================
    TẠO NHÂN VẬT
-========================= */
+========================================================= */
 
 function createCharacter() {
 
-    const input = $("playerName");
+    const nameInput = get("playerName");
 
-    const name =
-        input && input.value.trim()
-            ? input.value.trim()
-            : "Nhân vật vô danh";
+    let name = nameInput ? nameInput.value.trim() : "";
 
+    if (!name) {
+        name = "Nguyệt";
+    }
 
-    const lead = randomItem(maleLeads);
+    game.name = name;
 
+    game.identity = randomItem(identities);
+    game.personality = randomItem(personalities);
+    game.pastLife = randomItem(pastLives);
+    game.maleLead = randomItem(maleLeads);
 
-    game = {
+    game.day = 1;
+    game.chapter = 1;
+    game.scene = 0;
 
-        name: name,
+    game.affection = randomNumber(10, 25);
+    game.money = randomNumber(3000, 10000);
+    game.intelligence = randomNumber(40, 65);
+    game.reputation = randomNumber(35, 60);
+    game.willpower = randomNumber(40, 70);
 
-        identity: randomItem(identities),
-
-        personality: randomItem(personalities),
-
-        pastLife: randomItem(pastLives),
-
-        relationship: randomItem(relationships),
-
-        maleLead: lead,
-
-        day: 1,
-
-        sceneIndex: 0,
-
-        affection: randomInt(8, 25),
-
-        money: randomInt(20, 80),
-
-        intelligence: randomInt(35, 65),
-
-        reputation: randomInt(20, 55),
-
-        willpower: randomInt(35, 70),
-
-        history: [],
-
-        startedAt: Date.now()
-
-    };
-
-
-    renderCharacter();
+    updateCharacterScreen();
 
     showScreen("characterScreen");
 }
 
 
-/* =========================
+/* =========================================================
    HIỂN THỊ NHÂN VẬT
-========================= */
+========================================================= */
 
-function renderCharacter() {
+function updateCharacterScreen() {
 
-    if (!game) return;
+    if (get("characterName")) {
+        get("characterName").textContent = game.name;
+    }
 
+    if (get("identityText")) {
+        get("identityText").textContent = game.identity;
+    }
 
-    $("characterName").textContent =
-        game.name;
+    if (get("personalityText")) {
+        get("personalityText").textContent = game.personality;
+    }
 
+    if (get("maleLeadText")) {
+        get("maleLeadText").textContent =
+            `${game.maleLead[0]} — ${game.maleLead[1]}`;
+    }
 
-    $("identityText").textContent =
-        game.identity;
+    if (get("affectionStat")) {
+        get("affectionStat").textContent = game.affection;
+    }
 
+    if (get("moneyStat")) {
+        get("moneyStat").textContent = game.money;
+    }
 
-    $("personalityText").textContent =
-        game.personality;
+    if (get("intelligenceStat")) {
+        get("intelligenceStat").textContent = game.intelligence;
+    }
 
-
-    $("maleLeadText").textContent =
-        game.maleLead[0] +
-        " — " +
-        game.maleLead[1];
-
-
-    $("affectionStat").textContent =
-        game.affection;
-
-
-    $("moneyStat").textContent =
-        game.money;
-
-
-    $("intelligenceStat").textContent =
-        game.intelligence;
-
-
-    $("reputationStat").textContent =
-        game.reputation;
+    if (get("reputationStat")) {
+        get("reputationStat").textContent = game.reputation;
+    }
 }
 
 
-/* =========================
-   BẮT ĐẦU CỐT TRUYỆN
-========================= */
+/* =========================================================
+   BẮT ĐẦU CÂU CHUYỆN
+========================================================= */
 
 function beginStory() {
 
-    if (!game) {
-
-        startGame();
-
-        return;
-    }
-
-
     game.day = 1;
-
-    game.sceneIndex = 0;
-
+    game.chapter = 1;
+    game.scene = 0;
 
     showScreen("gameScreen");
 
-    renderScene();
+    updateStats();
+
+    loadScene();
 }
 
 
-/* =========================
-   HIỂN THỊ SCENE
-========================= */
+/* =========================================================
+   CÁC PHÂN CẢNH
+========================================================= */
 
-function renderScene() {
+const scenes = [
 
-    if (!game) return;
+    {
+        title: "TỈNH LẠI",
+        text: () =>
+            `Một cơn đau đầu dữ dội kéo bạn tỉnh lại.
 
+Căn phòng xa lạ nhưng kỳ lạ thay, từng món đồ trước mắt đều khiến bạn có cảm giác quen thuộc.
 
-    const scene =
-        scenes[game.sceneIndex];
+Bạn nhìn vào gương.
 
+Đây là gương mặt của chính mình...
 
-    if (!scene) {
+Nhưng trẻ hơn rất nhiều.
 
-        endGame();
+Một ký ức vụt qua.
 
-        return;
-    }
+${game.pastLife}
 
+Bạn đã trở về thời điểm mọi thứ vẫn còn có thể thay đổi.`,
 
-    $("dayText").textContent =
-        "Ngày " + game.day;
-
-
-    $("chapterText").textContent =
-        scene.chapter;
-
-
-    $("sceneTitle").textContent =
-        scene.title;
-
-
-    $("storyText").textContent =
-        scene.text(game);
-
-
-    updateGameStats();
-
-
-    const container =
-        $("choicesContainer");
-
-
-    container.innerHTML = "";
-
-
-    scene.choices.forEach(function(choice, index) {
-
-        const button =
-            document.createElement("button");
-
-
-        button.className =
-            "choice-button";
-
-
-        button.textContent =
-            (index + 1) +
-            ". " +
-            replaceVars(choice.text);
-
-
-        button.addEventListener(
-            "click",
-            function() {
-                choose(choice);
+        choices: [
+            {
+                text: "Bình tĩnh quan sát mọi thứ",
+                effect: {
+                    intelligence: 10,
+                    willpower: 5
+                }
+            },
+            {
+                text: "Hoảng loạn và tìm người giúp đỡ",
+                effect: {
+                    reputation: -5,
+                    willpower: -5
+                }
             }
-        );
+        ]
+    },
 
+    {
+        title: "LỰA CHỌN ĐẦU TIÊN",
+        text: () =>
+            `Bạn nhận ra mình đang đứng trước một ngã rẽ.
 
-        container.appendChild(button);
+Một bên là cuộc sống an toàn mà gia đình đã sắp xếp.
 
-    });
-}
+Một bên là con đường hoàn toàn do bạn lựa chọn.
 
+Kiếp trước, bạn đã từng hối hận vì không dám lựa chọn cho chính mình.`,
 
-/* =========================
-   THAY BIẾN TRONG CHOICE
-========================= */
-
-function replaceVars(text) {
-
-    if (!game) return text;
-
-
-    return text
-        .replaceAll(
-            "${g.maleLead[0]}",
-            game.maleLead[0]
-        )
-        .replaceAll(
-            "${g.name}",
-            game.name
-        );
-}
-
-
-/* =========================
-   CHỌN ĐÁP ÁN
-========================= */
-
-function choose(choice) {
-
-    if (!game) return;
-
-
-    applyEffect(
-        choice.effect || {}
-    );
-
-
-    game.history.push({
-
-        day: game.day,
-
-        scene: game.sceneIndex,
-
-        choice: replaceVars(
-            choice.text
-        ),
-
-        time: Date.now()
-
-    });
-
-
-    if (choice.ending) {
-
-        endGame();
-
-        return;
-    }
-
-
-    game.day++;
-
-
-    randomEvent();
-
-
-    game.sceneIndex++;
-
-
-    renderScene();
-}
-
-
-/* =========================
-   CỘNG / TRỪ CHỈ SỐ
-========================= */
-
-function applyEffect(effect) {
-
-    Object.keys(effect).forEach(function(key) {
-
-        if (
-            typeof game[key] !== "number"
-        ) {
-            return;
-        }
-
-
-        game[key] += effect[key];
-
-
-        if (key === "money") {
-
-            game[key] =
-                Math.max(
-                    0,
-                    game[key]
-                );
-
-        } else {
-
-            game[key] =
-                clamp(
-                    game[key],
-                    0,
-                    100
-                );
-        }
-
-    });
-}
-
-
-/* =========================
-   RANDOM EVENT
-========================= */
-
-function randomEvent() {
-
-    const roll =
-        Math.random();
-
-
-    if (roll < 0.20) {
-
-        game.money +=
-            randomInt(2, 8);
-
-
-        game.history.push({
-
-            day: game.day,
-
-            event:
-                "Một cơ hội nhỏ giúp tài chính được cải thiện."
-
-        });
-
-    }
-
-
-    else if (roll < 0.38) {
-
-        game.reputation =
-            clamp(
-                game.reputation +
-                randomInt(2, 6),
-                0,
-                100
-            );
-
-
-        game.history.push({
-
-            day: game.day,
-
-            event:
-                "Một việc tốt khiến danh tiếng tăng lên."
-
-        });
-
-    }
-
-
-    else if (roll < 0.54) {
-
-        game.intelligence =
-            clamp(
-                game.intelligence +
-                randomInt(1, 5),
-                0,
-                100
-            );
-
-
-        game.history.push({
-
-            day: game.day,
-
-            event:
-                "Một trải nghiệm mới giúp bạn trưởng thành hơn."
-
-        });
-
-    }
-
-
-    else if (roll < 0.67) {
-
-        game.affection =
-            clamp(
-                game.affection +
-                randomInt(1, 5),
-                0,
-                100
-            );
-
-
-        game.history.push({
-
-            day: game.day,
-
-            event:
-                "Một cuộc trò chuyện khiến khoảng cách giữa hai người thay đổi."
-
-        });
-
-    }
-
-}
-
-
-/* =========================
-   UPDATE STATS
-========================= */
-
-function updateGameStats() {
-
-    if (!game) return;
-
-
-    $("gameAffection").textContent =
-        game.affection;
-
-
-    $("gameMoney").textContent =
-        game.money;
-
-
-    $("gameIntelligence").textContent =
-        game.intelligence;
-
-
-    $("gameReputation").textContent =
-        game.reputation;
-}
-
-
-/* =========================
-   CHARACTER POPUP
-========================= */
-
-function showCharacterInfo() {
-
-    if (!game) return;
-
-
-    $("popupName").textContent =
-        game.name;
-
-
-    $("popupIdentity").textContent =
-        "Thân phận: " +
-        game.identity;
-
-
-    $("popupPersonality").textContent =
-        "Tính cách: " +
-        game.personality;
-
-
-    $("popupMaleLead").textContent =
-        "Nhân vật quan trọng: " +
-        game.maleLead[0] +
-        " — " +
-        game.maleLead[1];
-
-
-    $("popupAffection").textContent =
-        game.affection;
-
-
-    $("popupMoney").textContent =
-        game.money;
-
-
-    $("popupIntelligence").textContent =
-        game.intelligence;
-
-
-    $("popupReputation").textContent =
-        game.reputation;
-
-
-    $("characterPopup")
-        .classList
-        .add("show");
-}
-
-
-function closeCharacterInfo() {
-
-    const popup =
-        $("characterPopup");
-
-
-    if (popup) {
-
-        popup.classList.remove(
-            "show"
-        );
-
-    }
-}
-
-
-/* =========================
-   SAVE GAME
-========================= */
-
-function saveGame(showMessage = true) {
-
-    if (!game) return;
-
-
-    localStorage.setItem(
-        SAVE_KEY,
-        JSON.stringify(game)
-    );
-
-
-    if (showMessage) {
-
-        showToast(
-            "Đã lưu kiếp này."
-        );
-
-    }
-}
-
-
-/* =========================
-   LOAD GAME
-========================= */
-
-function loadGame() {
-
-    const saved =
-        localStorage.getItem(
-            SAVE_KEY
-        );
-
-
-    if (!saved) {
-
-        showToast(
-            "Chưa có kiếp nào được lưu."
-        );
-
-        return;
-    }
-
-
-    try {
-
-        game =
-            JSON.parse(saved);
-
-
-        if (
-            !game ||
-            !game.name ||
-            !game.maleLead
-        ) {
-
-            throw new Error(
-                "Save khô               text: "Khép lại một kiếp sống mới.",
-                effect: {
-                    reputation: 2,
-                    intelligence: 2
-                },
-                ending: true
-            },
-
+        choices: [
             {
-                text: "Đặt niềm tin vào người đã trở nên quan trọng.",
+                text: "Tự mình quyết định tương lai",
                 effect: {
-                    affection: 12
-                },
-                ending: true
+                    willpower: 15,
+                    intelligence: 5
+                }
             },
-
             {
-                text: "Chọn con đường độc lập của riêng mình.",
+                text: "Nghe theo gia đình",
                 effect: {
-                    money: 5,
-                    intelligence: 5,
+                    reputation: 10,
+                    money: 3000
+                }
+            },
+            {
+                text: "Chưa quyết định vội",
+                effect: {
+                    intelligence: 10
+                }
+            }
+        ]
+    },
+
+    {
+        title: "CUỘC GẶP ĐẦU TIÊN",
+        text: () =>
+            `Chiều hôm đó, bạn tình cờ gặp ${game.maleLead[0]}.
+
+${game.maleLead[0]} là ${game.maleLead[1]}, nổi tiếng với tính cách ${game.maleLead[2].toLowerCase()}.
+
+Hai người chỉ lướt qua nhau.
+
+Nhưng bạn lại có cảm giác...
+
+Cuộc gặp này từng xảy ra trong kiếp trước.`,
+
+        choices: [
+            {
+                text: "Chủ động bắt chuyện",
+                effect: {
+                    affection: 10,
                     reputation: 5
-                },
-                ending: true
+                }
+            },
+            {
+                text: "Giữ khoảng cách",
+                effect: {
+                    willpower: 10,
+                    intelligence: 5
+                }
+            },
+            {
+                text: "Quan sát anh ấy trước",
+                effect: {
+                    intelligence: 10,
+                    affection: 3
+                }
+            }
+        ]
+    },
+
+    {
+        title: "KÝ ỨC CŨ",
+        text: () =>
+            `Đêm xuống.
+
+Bạn nằm trên giường nhưng không thể ngủ.
+
+Một ký ức khác xuất hiện.
+
+Bạn nhớ đến một quyết định từng khiến mình hối hận.
+
+Nhưng lần này...
+
+Bạn có cơ hội sửa lại nó.`,
+
+        choices: [
+            {
+                text: "Thay đổi ngay lập tức",
+                effect: {
+                    willpower: 10,
+                    intelligence: 5
+                }
+            },
+            {
+                text: "Chờ thời cơ thích hợp",
+                effect: {
+                    intelligence: 15
+                }
+            },
+            {
+                text: "Không để quá khứ chi phối",
+                effect: {
+                    willpower: 15,
+                    affection: 5
+                }
+            }
+        ]
+    },
+
+    {
+        title: "NGÃ RẼ",
+        text: () =>
+            `Một cơ hội bất ngờ xuất hiện.
+
+Nếu nắm lấy, cuộc sống của bạn có thể thay đổi hoàn toàn.
+
+Nhưng nó cũng đồng nghĩa với việc bước vào một thế giới mà bạn chưa từng thuộc về.
+
+Lần này, bạn sẽ chọn gì?`,
+
+        choices: [
+            {
+                text: "Nắm lấy cơ hội",
+                effect: {
+                    money: 5000,
+                    reputation: 10,
+                    willpower: 10
+                }
+            },
+            {
+                text: "Từ chối và chọn cuộc sống bình thường",
+                effect: {
+                    intelligence: 10,
+                    willpower: 10
+                }
+            },
+            {
+                text: "Tìm cách biến cơ hội thành lợi thế",
+                effect: {
+                    intelligence: 20,
+                    money: 2000
+                }
+            }
+        ]
+    },
+
+    {
+        title: "ĐỐI DIỆN SỐ PHẬN",
+        text: () =>
+            `Bạn bắt đầu nhận ra một điều.
+
+Số phận không hoàn toàn cố định.
+
+Mỗi lựa chọn của bạn đều đang tạo ra một tương lai khác.
+
+${game.maleLead[0]} cũng bắt đầu xuất hiện thường xuyên hơn trong cuộc sống của bạn.
+
+Nhưng lần này...
+
+Bạn không muốn sống cuộc đời của người khác nữa.`,
+
+        choices: [
+            {
+                text: "Theo đuổi điều mình thật sự muốn",
+                effect: {
+                    willpower: 20,
+                    reputation: 5
+                }
+            },
+            {
+                text: "Tập trung xây dựng sự nghiệp",
+                effect: {
+                    intelligence: 10,
+                    money: 5000,
+                    reputation: 15
+                }
+            },
+            {
+                text: "Cho bản thân một cơ hội với người ấy",
+                effect: {
+                    affection: 20,
+                    willpower: 5
+                }
             }
         ]
     }
@@ -1088,134 +489,94 @@ function loadGame() {
 ];
 
 
-/* =========================
-   GAME STATE
-========================= */
+/* =========================================================
+   LOAD SCENE
+========================================================= */
 
-let game = null;
+function loadScene() {
 
-
-/* =========================
-   HELPER
-========================= */
-
-function $(id) {
-    return document.getElementById(id);
-}
-
-
-function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-}
-
-
-function randomItem(array) {
-    return array[Math.floor(Math.random() * array.length)];
-}
-
-
-function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-
-/* =========================
-   CHUYỂN SCREEN
-========================= */
-
-function showScreen(id) {
-
-    document.querySelectorAll(".screen").forEach(function(screen) {
-        screen.classList.remove("active");
-    });
-
-    const target = $(id);
-
-    if (target) {
-        target.classList.add("active");
-    }
-
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
-}
-
-
-/* =========================
-   BẮT ĐẦU GAME
-========================= */
-
-function startGame() {
-
-    showScreen("createScreen");
-
-      "Tự do sống cuộc đời mình.",
-            () => {
-
-                game.intelligence += 15;
-
-                game.reputation += 15;
-
-                endGame();
-
-            }
-        );
-
-
+    if (game.scene >= scenes.length) {
+        finishGame();
         return;
     }
 
+    currentScene = scenes[game.scene];
+
+    if (get("chapterText")) {
+        get("chapterText").textContent =
+            `CHƯƠNG ${game.chapter}`;
+    }
+
+    if (get("dayText")) {
+        get("dayText").textContent =
+            `Ngày ${game.day}`;
+    }
+
+    if (get("sceneTitle")) {
+        get("sceneTitle").textContent =
+            currentScene.title;
+    }
+
+    if (get("storyText")) {
+        get("storyText").textContent =
+            currentScene.text();
+    }
+
+    const container = get("choicesContainer");
+
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    currentScene.choices.forEach((choice, index) => {
+
+        const button = document.createElement("button");
+
+        button.className = "choice-button";
+
+        button.textContent =
+            `${index + 1}. ${choice.text}`;
+
+        button.onclick = () => {
+            chooseOption(choice);
+        };
+
+        container.appendChild(button);
+    });
+
+    updateStats();
 }
 
 
 /* =========================================================
-   ADD CHOICE
+   CHỌN LỰA CHỌN
 ========================================================= */
 
-function addChoice(text, action) {
+function chooseOption(choice) {
 
-    const button =
-        document.createElement("button");
+    if (!choice || !choice.effect) return;
 
-    button.className =
-        "choice-button";
+    Object.keys(choice.effect).forEach(stat => {
 
-    button.textContent =
-        text;
+        if (typeof game[stat] === "number") {
+            game[stat] += choice.effect[stat];
+        }
+    });
 
-    button.onclick = () => {
-
-        action();
-
-        updateStats();
-
-    };
-
-
-    document
-        .getElementById("choicesContainer")
-        .appendChild(button);
-
-}
-
-
-/* =========================================================
-   NEXT SCENE
-========================================================= */
-
-function nextScene() {
-
-    game.storyStep++;
+    clampStats();
 
     game.day++;
+    game.scene++;
+
+    if (game.scene % 3 === 0) {
+        game.chapter++;
+    }
 
     randomEvent();
 
-    saveGame(false);
+    updateStats();
 
-    renderScene();
-
+    loadScene();
 }
 
 
@@ -1225,106 +586,275 @@ function nextScene() {
 
 function randomEvent() {
 
-    const chance =
-        Math.random();
+    const chance = Math.random();
 
-    if (chance < 0.20) {
+    if (chance > 0.75) {
 
-        const event =
-            Math.floor(Math.random() * 3);
-
-
-        if (event === 0) {
-
-            game.money += 300;
-
-        }
-
+        const event = randomNumber(1, 4);
 
         if (event === 1) {
-
-            game.reputation += 5;
-
+            game.money += 1500;
         }
-
 
         if (event === 2) {
-
-            game.intelligence += 3;
-
+            game.reputation += 5;
         }
 
+        if (event === 3) {
+            game.intelligence += 5;
+        }
+
+        if (event === 4) {
+            game.affection += 5;
+        }
     }
 
+    clampStats();
 }
 
 
 /* =========================================================
-   ENDING
+   GIỚI HẠN CHỈ SỐ
 ========================================================= */
 
-function endGame() {
+function clampStats() {
 
-    game.ended = true;
+    game.affection =
+        Math.max(0, Math.min(100, game.affection));
 
-    saveGame(false);
+    game.intelligence =
+        Math.max(0, Math.min(100, game.intelligence));
 
+    game.reputation =
+        Math.max(0, Math.min(100, game.reputation));
+
+    game.willpower =
+        Math.max(0, Math.min(100, game.willpower));
+
+    game.money =
+        Math.max(0, game.money);
+}
+
+
+/* =========================================================
+   UPDATE STATS
+========================================================= */
+
+function updateStats() {
+
+    const values = {
+        gameAffection: game.affection,
+        gameMoney: game.money,
+        gameIntelligence: game.intelligence,
+        gameReputation: game.reputation
+    };
+
+    Object.keys(values).forEach(id => {
+
+        const element = get(id);
+
+        if (element) {
+            element.textContent = values[id];
+        }
+    });
+
+    if (get("dayText")) {
+        get("dayText").textContent =
+            `Ngày ${game.day}`;
+    }
+}
+
+
+/* =========================================================
+   CHARACTER POPUP
+========================================================= */
+
+function showCharacterInfo() {
+
+    if (get("characterPopup")) {
+        get("characterPopup").style.display = "flex";
+    }
+
+    if (get("popupName")) {
+        get("popupName").textContent = game.name;
+    }
+
+    if (get("popupIdentity")) {
+        get("popupIdentity").textContent = game.identity;
+    }
+
+    if (get("popupPersonality")) {
+        get("popupPersonality").textContent =
+            game.personality;
+    }
+
+    if (get("popupMaleLead")) {
+        get("popupMaleLead").textContent =
+            `${game.maleLead[0]} — ${game.maleLead[1]}`;
+    }
+
+    if (get("popupAffection")) {
+        get("popupAffection").textContent =
+            game.affection;
+    }
+
+    if (get("popupMoney")) {
+        get("popupMoney").textContent =
+            game.money;
+    }
+
+    if (get("popupIntelligence")) {
+        get("popupIntelligence").textContent =
+            game.intelligence;
+    }
+
+    if (get("popupReputation")) {
+        get("popupReputation").textContent =
+            game.reputation;
+    }
+}
+
+
+function closeCharacterInfo() {
+
+    if (get("characterPopup")) {
+        get("characterPopup").style.display = "none";
+    }
+}
+
+
+/* =========================================================
+   KẾT THÚC
+========================================================= */
+
+function finishGame() {
 
     let title = "";
-
     let text = "";
-
 
     if (
         game.affection >= 70 &&
-        game.affection >= game.reputation &&
-        game.affection >= game.intelligence
+        game.willpower >= 70
     ) {
 
-        title =
-            "ENDING — TÌNH YÊU ĐỊNH MỆNH";
+        title = "KẾT CỤC: DUYÊN ĐỊNH LẠI";
 
         text =
+            `Bạn đã thay đổi hoàn toàn những gì từng xảy ra.
 
-`Bạn đã thay đổi rất nhiều thứ trong cuộc đời này.
+Bạn không còn là người bị số phận dẫn dắt.
 
-Nhưng điều quan trọng nhất...
+Lần này, bạn tự mình lựa chọn tương lai.
 
-là lần này bạn không bỏ lỡ người mà mình muốn giữ lại.
-
-Có những cuộc gặp gỡ giống như đã được định sẵn từ rất lâu.
+Và bên cạnh bạn là ${game.maleLead[0]}.
 
 Có lẽ...
 
-đây mới là câu chuyện mà bạn thực sự muốn sống.`;
-
+Đây mới là cuộc đời mà bạn thực sự muốn sống.`;
     }
 
     else if (
-        game.money >= 5000 &&
-        game.reputation >= 60
+        game.money >= 15000 &&
+        game.reputation >= 70 &&
+        game.intelligence >= 65
     ) {
 
-        title =
-            "ENDING — NỮ HOÀNG CỦA ĐỜI MÌNH";
+        title = "KẾT CỤC: NỮ CHÍNH TỰ LẬP";
 
         text =
+            `Bạn đã xây dựng được vị trí của riêng mình.
 
-`Bạn không còn là người chờ đợi số phận quyết định tương lai.
+Không cần dựa vào gia đình.
 
-Bạn đã tự mình xây dựng vị trí của mình.
+Không cần dựa vào bất kỳ ai.
 
-Tiền bạc, danh tiếng và năng lực...
-
-tất cả đều thuộc về bạn.
-
-Kiếp này, bạn không cần ai cứu mình.`;
-
+Bạn đã trở thành người có thể tự quyết định số phận của chính mình.`;
     }
 
-    else if (
-        game.intelligence >= 75
-    ) {
+    else if (game.willpower >= 75) {
 
-        title =
-      
+        title = "KẾT CỤC: PHÁN QUYẾT SỐ PHẬN";
+
+        text =
+            `Bạn không thể thay đổi tất cả.
+
+Nhưng bạn đã thay đổi chính mình.
+
+Và đôi khi...
+
+đó chính là cách mạnh mẽ nhất để thay đổi số phận.`;
+    }
+
+    else {
+
+        title = "KẾT CỤC: MỘT KIẾP SỐNG KHÁC";
+
+        text =
+            `Cuộc đời này không giống kiếp trước.
+
+Dù chưa thể đạt được tất cả những gì mong muốn,
+bạn đã có một cơ hội để sống lại và lựa chọn.
+
+Có lẽ câu chuyện của bạn...
+
+vẫn còn tiếp tục.`;
+    }
+
+    if (get("endingTitle")) {
+        get("endingTitle").textContent = title;
+    }
+
+    if (get("endingText")) {
+        get("endingText").textContent = text;
+    }
+
+    if (get("finalAffection")) {
+        get("finalAffection").textContent =
+            game.affection;
+    }
+
+    if (get("finalMoney")) {
+        get("finalMoney").textContent =
+            game.money;
+    }
+
+    if (get("finalIntelligence")) {
+        get("finalIntelligence").textContent =
+            game.intelligence;
+    }
+
+    if (get("finalReputation")) {
+        get("finalReputation").textContent =
+            game.reputation;
+    }
+
+    saveGame();
+
+    showScreen("endingScreen");
+}
+
+
+/* =========================================================
+   LƯU GAME
+========================================================= */
+
+function saveGame() {
+
+    try {
+        localStorage.setItem(
+            "trungSinhGame",
+            JSON.stringify(game)
+        );
+    } catch (error) {
+        console.warn("Không thể lưu game:", error);
+    }
+}
+
+
+/* =========================================================
+   LOAD GAME
+========================================================= */
+
+function loadGame() {
+
+    tr
