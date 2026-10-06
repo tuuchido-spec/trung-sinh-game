@@ -1,341 +1,75 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>TRÙNG SINH</title>
-
-    <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TRÙNG SINH — Kiếp này ta chọn ai?</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-
 <div id="app">
-
-    <!-- =========================
-         MÀN HÌNH BẮT ĐẦU
-    ========================== -->
-
-    <section id="startScreen" class="screen active">
-
-        <div class="title-area">
-
-            <div class="small-title">
-                MỘT KIẾP KHÔNG ĐỦ
-            </div>
-
-            <h1>TRÙNG SINH</h1>
-
-            <p class="subtitle">
-                KIẾP NÀY TA CHỌN AI?
-            </p>
-
-            <div class="ornament">
-                ───── ✦ ─────
-            </div>
-
-            <p class="intro">
-                Nếu được sống lại một lần nữa...
-                <br>
-                bạn sẽ thay đổi số phận của mình chứ?
-            </p>
-
-        </div>
-
-        <button class="main-button" onclick="startGame()">
-            BẮT ĐẦU KIẾP NÀY
-        </button>
-
-        <button class="secondary-button" onclick="loadGame()">
-            TIẾP TỤC
-        </button>
-
-    </section>
-
-
-    <!-- =========================
-         MÀN HÌNH TẠO NHÂN VẬT
-    ========================== -->
-
-    <section id="createScreen" class="screen">
-
-        <div class="panel">
-
-            <div class="chapter">
-                CHƯƠNG 0
-            </div>
-
-            <h2>KIẾP NÀY LÀ AI?</h2>
-
-            <p>
-                Trước khi bắt đầu, hãy cho nhân vật của bạn một cái tên.
-            </p>
-
-            <input
-                id="playerName"
-                type="text"
-                maxlength="20"
-                placeholder="Nhập tên của bạn..."
-            >
-
-            <button class="main-button" onclick="createCharacter()">
-                BẮT ĐẦU TRÙNG SINH
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         MÀN HÌNH THÔNG TIN NHÂN VẬT
-    ========================== -->
-
-    <section id="characterScreen" class="screen">
-
-        <div class="panel">
-
-            <div class="chapter">
-                THÔNG TIN KIẾP NÀY
-            </div>
-
-            <h2 id="characterName"></h2>
-
-            <div class="character-card">
-
-                <div class="info-row">
-                    <span>Thân phận</span>
-                    <strong id="identityText"></strong>
-                </div>
-
-                <div class="info-row">
-                    <span>Tính cách</span>
-                    <strong id="personalityText"></strong>
-                </div>
-
-                <div class="info-row">
-                    <span>Nam chính</span>
-                    <strong id="maleLeadText"></strong>
-                </div>
-
-            </div>
-
-            <div class="stats">
-
-                <div class="stat">
-                    <span>❤️</span>
-                    <small>Hảo cảm</small>
-                    <strong id="affectionStat">0</strong>
-                </div>
-
-                <div class="stat">
-                    <span>💰</span>
-                    <small>Tiền</small>
-                    <strong id="moneyStat">0</strong>
-                </div>
-
-                <div class="stat">
-                    <span>🧠</span>
-                    <small>Trí tuệ</small>
-                    <strong id="intelligenceStat">0</strong>
-                </div>
-
-                <div class="stat">
-                    <span>⭐</span>
-                    <small>Danh tiếng</small>
-                    <strong id="reputationStat">0</strong>
-                </div>
-
-            </div>
-
-            <button class="main-button" onclick="beginStory()">
-                MỞ MẮT
-            </button>
-
-        </div>
-
-    </section>
-
-
-    <!-- =========================
-         MÀN HÌNH GAME
-    ========================== -->
-
-    <section id="gameScreen" class="screen">
-
-        <!-- HEADER -->
-
-        <header class="game-header">
-
-            <div>
-                <span id="dayText">Ngày 1</span>
-            </div>
-
-            <button onclick="showCharacterInfo()">
-                ☰
-            </button>
-
-        </header>
-
-
-        <!-- CHỈ SỐ -->
-
-        <div class="mini-stats">
-
-            <span>❤️ <b id="gameAffection">0</b></span>
-
-            <span>💰 <b id="gameMoney">0</b></span>
-
-            <span>🧠 <b id="gameIntelligence">0</b></span>
-
-            <span>⭐ <b id="gameReputation">0</b></span>
-
-        </div>
-
-
-        <!-- CỐT TRUYỆN -->
-
-        <main class="story-container">
-
-            <div class="chapter" id="chapterText">
-                CHƯƠNG 1
-            </div>
-
-            <h2 id="sceneTitle"></h2>
-
-            <div id="characterVisual" class="character-visual hidden">
-                <div class="character-glow"></div>
-                <img id="characterImage" src="" alt="Nhân vật">
-                <div id="characterNameTag" class="character-name-tag"></div>
-            </div>
-
-            <div id="storyText" class="story-text"></div>
-
-            <div id="choicesContainer" class="choices"></div>
-
-        </main>
-
-
-        <!-- FOOTER -->
-
-        <footer>
-
-            <button onclick="saveGame()">
-                💾 Lưu
-            </button>
-
-            <button onclick="showCharacterInfo()">
-                👤 Nhân vật
-            </button>
-
-        </footer>
-
-    </section>
-
-
-    <!-- =========================
-         POPUP THÔNG TIN
-    ========================== -->
-
-    <div id="characterPopup" class="popup">
-
-        <div class="popup-content">
-
-            <button class="close-button" onclick="closeCharacterInfo()">
-                ×
-            </button>
-
-            <h2 id="popupName"></h2>
-
-            <p id="popupIdentity"></p>
-
-            <p id="popupPersonality"></p>
-
-            <p id="popupMaleLead"></p>
-
-            <hr>
-
-            <div class="popup-stat">
-                ❤️ Hảo cảm:
-                <strong id="popupAffection"></strong>
-            </div>
-
-            <div class="popup-stat">
-                💰 Tiền:
-                <strong id="popupMoney"></strong>
-            </div>
-
-            <div class="popup-stat">
-                🧠 Trí tuệ:
-                <strong id="popupIntelligence"></strong>
-            </div>
-
-            <div class="popup-stat">
-                ⭐ Danh tiếng:
-                <strong id="popupReputation"></strong>
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         MÀN HÌNH ENDING
-    ========================== -->
-
-    <section id="endingScreen" class="screen">
-
-        <div class="ending-panel">
-
-            <div class="chapter">
-                KẾT THÚC
-            </div>
-
-            <h1 id="endingTitle"></h1>
-
-            <div class="ending-line">
-                ✦
-            </div>
-
-            <p id="endingText"></p>
-
-            <div class="final-stats">
-
-                <p>
-                    ❤️ Hảo cảm:
-                    <strong id="finalAffection"></strong>
-                </p>
-
-                <p>
-                    💰 Tiền:
-                    <strong id="finalMoney"></strong>
-                </p>
-
-                <p>
-                    🧠 Trí tuệ:
-                    <strong id="finalIntelligence"></strong>
-                </p>
-
-                <p>
-                    ⭐ Danh tiếng:
-                    <strong id="finalReputation"></strong>
-                </p>
-
-            </div>
-
-            <button class="main-button" onclick="restartGame()">
-                TRÙNG SINH LẦN NỮA
-            </button>
-
-        </div>
-
-    </section>
-
+<section id="titleScreen" class="screen active">
+  <div class="title-bg"></div><div class="title-content">
+    <div class="eyebrow">A MODERN REINCARNATION VISUAL NOVEL</div>
+    <h1>TRÙNG SINH</h1><p class="title-sub">KIẾP NÀY, TA CHỌN AI?</p>
+    <p class="title-desc">Một cuộc đời mới. Những người cũ. Và những lựa chọn không thể quay lại.</p>
+    <button class="primary-btn" id="startBtn">BẮT ĐẦU KIẾP NÀY</button>
+    <button class="ghost-btn" id="continueBtn">TIẾP TỤC</button>
+    <div class="title-note">Autosave • Multiple Routes • Multiple Endings</div>
+  </div>
+</section>
+
+<section id="createScreen" class="screen">
+  <div class="topbar"><button class="icon-btn" data-back="titleScreen">‹</button><span>01 / TẠO NHÂN VẬT</span></div>
+  <div class="form-card"><div class="section-kicker">NEW LIFE</div><h2>Kiếp này, bạn là ai?</h2>
+    <label>Tên của bạn</label><input id="nameInput" maxlength="20" placeholder="Nhập tên..." autocomplete="off">
+    <label>Thân phận</label><div id="identityChoices" class="choice-grid"></div>
+    <button class="primary-btn" id="createBtn">BƯỚC VÀO KIẾP NÀY</button>
+  </div>
+</section>
+
+<section id="hubScreen" class="screen">
+  <header class="gamebar"><div><div class="small-label">KIẾP MỚI</div><strong id="hubDay">Ngày 1</strong></div><button class="icon-btn" id="saveBtn">⌁</button></header>
+  <div class="hub-hero"><div class="memory-orb"><span id="memoryCount">0</span><small>/ 20</small></div>
+    <div><div class="section-kicker">MẢNH KÝ ỨC</div><h2 id="hubGreeting">Một cuộc đời mới.</h2><p id="hubHint">Bạn có quyền chọn lại.</p></div>
+  </div>
+  <div class="stats-grid" id="hubStats"></div>
+  <div class="hub-grid">
+    <button class="hub-btn" data-action="work">💼<span>Công việc</span></button>
+    <button class="hub-btn" data-action="relation">❤️<span>Quan hệ</span></button>
+    <button class="hub-btn" data-action="family">🏠<span>Gia đình</span></button>
+    <button class="hub-btn" data-action="study">📚<span>Học tập</span></button>
+    <button class="hub-btn" data-action="city">🌆<span>Thành phố</span></button>
+    <button class="hub-btn" data-action="memory">🔎<span>Ký ức</span></button>
+  </div>
+  <div class="hub-footer"><button class="secondary-btn" id="journalBtn">📖 Nhật ký</button><button class="secondary-btn" id="profileBtn">✦ Hồ sơ</button></div>
+</section>
+
+<section id="sceneScreen" class="screen">
+  <div id="sceneBackground" class="scene-background"></div>
+  <header class="scene-top"><button class="icon-btn" id="sceneBackBtn">‹</button>
+    <div><div id="sceneChapter" class="small-label">CHƯƠNG 1</div><strong id="sceneDay">Ngày 1</strong></div>
+    <div class="scene-type" id="sceneType">CỐT TRUYỆN</div>
+  </header>
+  <div class="scene-character" id="sceneCharacter"><div class="character-placeholder" id="characterPlaceholder">?</div><img id="characterImage" alt="" hidden></div>
+  <div class="dialogue-card"><div class="speaker" id="speakerName">Người kể chuyện</div><div class="dialogue" id="dialogueText"></div><div id="choices" class="dialogue-choices"></div></div>
+</section>
+
+<section id="journalScreen" class="screen">
+  <div class="topbar"><button class="icon-btn" data-back="hubScreen">‹</button><span>NHẬT KÝ</span></div>
+  <div class="journal-card"><div class="tabs"><button class="tab active" data-tab="memories">Ký ức</button><button class="tab" data-tab="routes">Quan hệ</button></div><div id="journalContent"></div></div>
+</section>
+
+<section id="profileScreen" class="screen">
+  <div class="topbar"><button class="icon-btn" data-back="hubScreen">‹</button><span>HỒ SƠ</span></div><div id="profileContent" class="profile-card"></div>
+</section>
+
+<section id="endingScreen" class="screen">
+  <div class="ending-glow"></div><div class="ending-content"><div class="section-kicker">ENDING UNLOCKED</div>
+  <h1 id="endingTitle"></h1><p id="endingText"></p><div id="endingStats" class="ending-stats"></div>
+  <button class="primary-btn" id="restartBtn">SỐNG LẠI TỪ ĐẦU</button></div>
+</section>
+<div id="toast" class="toast"></div>
 </div>
-
-<script src="game.js"></script>
-
-</body>
-                      </html>
+<script src="js/story.js"></script><script src="js/characters.js"></script><script src="js/situations.js"></script><script src="js/endings.js"></script><script src="js/game.js"></script>
+</body></html>
