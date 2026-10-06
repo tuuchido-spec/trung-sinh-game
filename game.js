@@ -477,6 +477,679 @@ function startGame() {
 
     showScreen("createScreen");
 
+    setTimeout(function() {
+
+        const input = $("playerName");
+
+        if (input) {
+            input.focus();
+        }
+
+    }, 250);
+}
+
+
+/* =========================
+   TẠO NHÂN VẬT
+========================= */
+
+function createCharacter() {
+
+    const input = $("playerName");
+
+    const name =
+        input && input.value.trim()
+            ? input.value.trim()
+            : "Nhân vật vô danh";
+
+
+    const lead = randomItem(maleLeads);
+
+
+    game = {
+
+        name: name,
+
+        identity: randomItem(identities),
+
+        personality: randomItem(personalities),
+
+        pastLife: randomItem(pastLives),
+
+        relationship: randomItem(relationships),
+
+        maleLead: lead,
+
+        day: 1,
+
+        sceneIndex: 0,
+
+        affection: randomInt(8, 25),
+
+        money: randomInt(20, 80),
+
+        intelligence: randomInt(35, 65),
+
+        reputation: randomInt(20, 55),
+
+        willpower: randomInt(35, 70),
+
+        history: [],
+
+        startedAt: Date.now()
+
+    };
+
+
+    renderCharacter();
+
+    showScreen("characterScreen");
+}
+
+
+/* =========================
+   HIỂN THỊ NHÂN VẬT
+========================= */
+
+function renderCharacter() {
+
+    if (!game) return;
+
+
+    $("characterName").textContent =
+        game.name;
+
+
+    $("identityText").textContent =
+        game.identity;
+
+
+    $("personalityText").textContent =
+        game.personality;
+
+
+    $("maleLeadText").textContent =
+        game.maleLead[0] +
+        " — " +
+        game.maleLead[1];
+
+
+    $("affectionStat").textContent =
+        game.affection;
+
+
+    $("moneyStat").textContent =
+        game.money;
+
+
+    $("intelligenceStat").textContent =
+        game.intelligence;
+
+
+    $("reputationStat").textContent =
+        game.reputation;
+}
+
+
+/* =========================
+   BẮT ĐẦU CỐT TRUYỆN
+========================= */
+
+function beginStory() {
+
+    if (!game) {
+
+        startGame();
+
+        return;
+    }
+
+
+    game.day = 1;
+
+    game.sceneIndex = 0;
+
+
+    showScreen("gameScreen");
+
+    renderScene();
+}
+
+
+/* =========================
+   HIỂN THỊ SCENE
+========================= */
+
+function renderScene() {
+
+    if (!game) return;
+
+
+    const scene =
+        scenes[game.sceneIndex];
+
+
+    if (!scene) {
+
+        endGame();
+
+        return;
+    }
+
+
+    $("dayText").textContent =
+        "Ngày " + game.day;
+
+
+    $("chapterText").textContent =
+        scene.chapter;
+
+
+    $("sceneTitle").textContent =
+        scene.title;
+
+
+    $("storyText").textContent =
+        scene.text(game);
+
+
+    updateGameStats();
+
+
+    const container =
+        $("choicesContainer");
+
+
+    container.innerHTML = "";
+
+
+    scene.choices.forEach(function(choice, index) {
+
+        const button =
+            document.createElement("button");
+
+
+        button.className =
+            "choice-button";
+
+
+        button.textContent =
+            (index + 1) +
+            ". " +
+            replaceVars(choice.text);
+
+
+        button.addEventListener(
+            "click",
+            function() {
+                choose(choice);
+            }
+        );
+
+
+        container.appendChild(button);
+
+    });
+}
+
+
+/* =========================
+   THAY BIẾN TRONG CHOICE
+========================= */
+
+function replaceVars(text) {
+
+    if (!game) return text;
+
+
+    return text
+        .replaceAll(
+            "${g.maleLead[0]}",
+            game.maleLead[0]
+        )
+        .replaceAll(
+            "${g.name}",
+            game.name
+        );
+}
+
+
+/* =========================
+   CHỌN ĐÁP ÁN
+========================= */
+
+function choose(choice) {
+
+    if (!game) return;
+
+
+    applyEffect(
+        choice.effect || {}
+    );
+
+
+    game.history.push({
+
+        day: game.day,
+
+        scene: game.sceneIndex,
+
+        choice: replaceVars(
+            choice.text
+        ),
+
+        time: Date.now()
+
+    });
+
+
+    if (choice.ending) {
+
+        endGame();
+
+        return;
+    }
+
+
+    game.day++;
+
+
+    randomEvent();
+
+
+    game.sceneIndex++;
+
+
+    renderScene();
+}
+
+
+/* =========================
+   CỘNG / TRỪ CHỈ SỐ
+========================= */
+
+function applyEffect(effect) {
+
+    Object.keys(effect).forEach(function(key) {
+
+        if (
+            typeof game[key] !== "number"
+        ) {
+            return;
+        }
+
+
+        game[key] += effect[key];
+
+
+        if (key === "money") {
+
+            game[key] =
+                Math.max(
+                    0,
+                    game[key]
+                );
+
+        } else {
+
+            game[key] =
+                clamp(
+                    game[key],
+                    0,
+                    100
+                );
+        }
+
+    });
+}
+
+
+/* =========================
+   RANDOM EVENT
+========================= */
+
+function randomEvent() {
+
+    const roll =
+        Math.random();
+
+
+    if (roll < 0.20) {
+
+        game.money +=
+            randomInt(2, 8);
+
+
+        game.history.push({
+
+            day: game.day,
+
+            event:
+                "Một cơ hội nhỏ giúp tài chính được cải thiện."
+
+        });
+
+    }
+
+
+    else if (roll < 0.38) {
+
+        game.reputation =
+            clamp(
+                game.reputation +
+                randomInt(2, 6),
+                0,
+                100
+            );
+
+
+        game.history.push({
+
+            day: game.day,
+
+            event:
+                "Một việc tốt khiến danh tiếng tăng lên."
+
+        });
+
+    }
+
+
+    else if (roll < 0.54) {
+
+        game.intelligence =
+            clamp(
+                game.intelligence +
+                randomInt(1, 5),
+                0,
+                100
+            );
+
+
+        game.history.push({
+
+            day: game.day,
+
+            event:
+                "Một trải nghiệm mới giúp bạn trưởng thành hơn."
+
+        });
+
+    }
+
+
+    else if (roll < 0.67) {
+
+        game.affection =
+            clamp(
+                game.affection +
+                randomInt(1, 5),
+                0,
+                100
+            );
+
+
+        game.history.push({
+
+            day: game.day,
+
+            event:
+                "Một cuộc trò chuyện khiến khoảng cách giữa hai người thay đổi."
+
+        });
+
+    }
+
+}
+
+
+/* =========================
+   UPDATE STATS
+========================= */
+
+function updateGameStats() {
+
+    if (!game) return;
+
+
+    $("gameAffection").textContent =
+        game.affection;
+
+
+    $("gameMoney").textContent =
+        game.money;
+
+
+    $("gameIntelligence").textContent =
+        game.intelligence;
+
+
+    $("gameReputation").textContent =
+        game.reputation;
+}
+
+
+/* =========================
+   CHARACTER POPUP
+========================= */
+
+function showCharacterInfo() {
+
+    if (!game) return;
+
+
+    $("popupName").textContent =
+        game.name;
+
+
+    $("popupIdentity").textContent =
+        "Thân phận: " +
+        game.identity;
+
+
+    $("popupPersonality").textContent =
+        "Tính cách: " +
+        game.personality;
+
+
+    $("popupMaleLead").textContent =
+        "Nhân vật quan trọng: " +
+        game.maleLead[0] +
+        " — " +
+        game.maleLead[1];
+
+
+    $("popupAffection").textContent =
+        game.affection;
+
+
+    $("popupMoney").textContent =
+        game.money;
+
+
+    $("popupIntelligence").textContent =
+        game.intelligence;
+
+
+    $("popupReputation").textContent =
+        game.reputation;
+
+
+    $("characterPopup")
+        .classList
+        .add("show");
+}
+
+
+function closeCharacterInfo() {
+
+    const popup =
+        $("characterPopup");
+
+
+    if (popup) {
+
+        popup.classList.remove(
+            "show"
+        );
+
+    }
+}
+
+
+/* =========================
+   SAVE GAME
+========================= */
+
+function saveGame(showMessage = true) {
+
+    if (!game) return;
+
+
+    localStorage.setItem(
+        SAVE_KEY,
+        JSON.stringify(game)
+    );
+
+
+    if (showMessage) {
+
+        showToast(
+            "Đã lưu kiếp này."
+        );
+
+    }
+}
+
+
+/* =========================
+   LOAD GAME
+========================= */
+
+function loadGame() {
+
+    const saved =
+        localStorage.getItem(
+            SAVE_KEY
+        );
+
+
+    if (!saved) {
+
+        showToast(
+            "Chưa có kiếp nào được lưu."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        game =
+            JSON.parse(saved);
+
+
+        if (
+            !game ||
+            !game.name ||
+            !game.maleLead
+        ) {
+
+            throw new Error(
+                "Save khô               text: "Khép lại một kiếp sống mới.",
+                effect: {
+                    reputation: 2,
+                    intelligence: 2
+                },
+                ending: true
+            },
+
+            {
+                text: "Đặt niềm tin vào người đã trở nên quan trọng.",
+                effect: {
+                    affection: 12
+                },
+                ending: true
+            },
+
+            {
+                text: "Chọn con đường độc lập của riêng mình.",
+                effect: {
+                    money: 5,
+                    intelligence: 5,
+                    reputation: 5
+                },
+                ending: true
+            }
+        ]
+    }
+
+];
+
+
+/* =========================
+   GAME STATE
+========================= */
+
+let game = null;
+
+
+/* =========================
+   HELPER
+========================= */
+
+function $(id) {
+    return document.getElementById(id);
+}
+
+
+function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+}
+
+
+function randomItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+/* =========================
+   CHUYỂN SCREEN
+========================= */
+
+function showScreen(id) {
+
+    document.querySelectorAll(".screen").forEach(function(screen) {
+        screen.classList.remove("active");
+    });
+
+    const target = $(id);
+
+    if (target) {
+        target.classList.add("active");
+    }
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* =========================
+   BẮT ĐẦU GAME
+========================= */
+
+function startGame() {
+
+    showScreen("createScreen");
+
       "Tự do sống cuộc đời mình.",
             () => {
 
