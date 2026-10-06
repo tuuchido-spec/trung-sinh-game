@@ -814,3 +814,20 @@ footer button {
         font-size: 13px;
     }
 }
+
+
+/* =========================================================
+   STORY TYPE LABEL
+========================================================= */
+
+#chapterText {
+    transition: color .25s ease;
+}
+
+#sceneTitle {
+    position: relative;
+}
+
+.story-text {
+    white-space: pre-line;
+}

@@ -1,0 +1,9 @@
+TRÙNG SINH — STORY SYSTEM v2
+
+CỐT TRUYỆN và TÌNH HUỐNG đã tách riêng.
+- Cốt truyện chính: 5 chương, 5 mốc bắt buộc.
+- Tình huống: 20 sự kiện độc lập, được chọn xen kẽ theo ngày.
+- 20 route nam chính có hook và conflict riêng.
+- Chỉ số mới: Sự nghiệp, Tin tưởng, Tự do, Căng thẳng.
+- Lựa chọn tình huống không làm thay đổi storyIndex; lựa chọn cốt truyện mới làm storyIndex tiến lên.
+- Ending dựa trên nhiều nhóm chỉ số thay vì chỉ tình cảm.
