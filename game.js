@@ -856,5 +856,32 @@ function saveGame() {
 ========================================================= */
 
 function loadGame() {
+    try {
+        const saved = localStorage.getItem("trungSinhGame");
 
-    tr
+        if (!saved) {
+            alert("Chưa có dữ liệu game được lưu.");
+            return;
+        }
+
+        game = JSON.parse(saved);
+
+        updateCharacterScreen();
+        updateStats();
+        showScreen("gameScreen");
+        loadScene();
+
+    } catch (error) {
+        console.error("Không thể tải game:", error);
+        alert("Dữ liệu game không hợp lệ.");
+    }
+}
+
+
+/* =========================================================
+   KHỞI TẠO GAME
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+    showScreen("startScreen");
+});
